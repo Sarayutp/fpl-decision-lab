@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#071a17">
+    <meta name="description" content="ผู้ช่วยตัดสินใจ Fantasy Premier League แบบฟรี โปร่งใส และไม่ใช้รหัสผ่าน FPL">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FPL Decision Lab">
+    <meta property="og:description" content="Data • Decisions • Deadline — ผู้ช่วยตัดสินใจ FPL แบบฟรีและอธิบายได้">
+    <meta property="og:image" content="./public/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FPL Decision Lab">
+    <meta name="twitter:description" content="Data • Decisions • Deadline — ผู้ช่วยตัดสินใจ FPL แบบฟรีและอธิบายได้">
+    <meta name="twitter:image" content="./public/og.png">
+    <title>FPL Decision Lab</title>
+    <link rel="icon" type="image/png" href="./public/favicon.png">
+    <link rel="apple-touch-icon" href="./public/icon-192.png">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="stylesheet" href="./assets/styles.css?v=7">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">ข้ามไปยังเนื้อหา</a>
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="FPL Decision Lab หน้าแรก">
+        <span class="brand-mark" aria-hidden="true">F</span>
+        <span>
+          <strong>FPL Decision Lab</strong>
+          <small>FREE • EXPLAINABLE • LOCAL-FIRST</small>
+        </span>
+      </a>
+      <nav aria-label="เมนูหลัก">
+        <a href="#overview">ภาพรวม</a>
+        <a href="#recommended">ทีมแนะนำ</a>
+        <a href="#squad-lab">Squad Lab</a>
+        <a href="#players">ผู้เล่น</a>
+        <a href="#ai-briefing">AI Briefing</a>
+      </nav>
+      <span id="freshness-badge" class="freshness-badge">กำลังโหลดข้อมูล</span>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="overview">
+        <div class="hero-copy">
+          <p class="eyebrow">YOUR GAMEWEEK CONTROL ROOM</p>
+          <h1>ตัดสินใจก่อน deadline<br><span>ด้วยข้อมูล ไม่ใช่อารมณ์</span></h1>
+          <p class="hero-lead">
+            xP ที่อธิบายได้, optimizer ตามกติกา FPL และข่าวที่ให้ ChatGPT ช่วยตรวจซ้ำ
+            — ทำงานได้โดยไม่แตะรหัสผ่านของคุณ
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#squad-lab">จัดทีมของฉัน</a>
+            <a class="button button-ghost" href="#ai-briefing">เตรียมถาม ChatGPT</a>
+          </div>
+        </div>
+        <aside class="deadline-panel" aria-labelledby="deadline-title">
+          <div class="live-label"><span></span> NEXT DECISION</div>
+          <p id="deadline-title" class="deadline-gw">Gameweek —</p>
+          <p id="countdown" class="countdown">— วัน —:—:—</p>
+          <p id="deadline-local" class="deadline-local">กำลังอ่าน deadline…</p>
+          <div class="deadline-rule"></div>
+          <p class="deadline-tip">กฎประจำสัปดาห์</p>
+          <strong id="next-action">รอข้อมูลคำแนะนำ</strong>
+        </aside>
+      </section>
+
+      <section class="metric-grid" aria-label="ตัวชี้วัดสำคัญ">
+        <article class="metric-card">
+          <span>อันดับรวม</span>
+          <strong id="overall-rank">—</strong>
+          <small id="overall-points">ยังไม่มีคะแนน</small>
+        </article>
+        <article class="metric-card accent-card">
+          <span>xP ทีมแนะนำ + กัปตัน</span>
+          <strong id="recommended-xp">—</strong>
+          <small id="recommended-formation">กำลังคำนวณ</small>
+        </article>
+        <article class="metric-card">
+          <span>งบทีมแนะนำ</span>
+          <strong id="recommended-cost">—</strong>
+          <small id="recommended-bank">—</small>
+        </article>
+        <article class="metric-card">
+          <span>ขอบเขตโมเดล</span>
+          <strong id="model-horizon">—</strong>
+          <small id="model-version">—</small>
+        </article>
+      </section>
+
+      <section class="dashboard-grid section-block">
+        <article class="panel captain-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">CAPTAIN RADAR</p>
+              <h2>ตัวเลือกปลอกแขน</h2>
+            </div>
+            <span class="info-chip">เรียงตาม xP</span>
+          </div>
+          <div id="captain-list" class="captain-list skeleton-lines" aria-live="polite"></div>
+        </article>
+
+        <article class="panel model-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">WHY THIS NUMBER?</p>
+              <h2>โมเดลคิดอย่างไร</h2>
+            </div>
+          </div>
+          <div id="model-explainer" class="model-explainer skeleton-lines"></div>
+        </article>
+
+        <article class="panel warning-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">CHECK BEFORE LOCK</p>
+              <h2>สิ่งที่ต้องยืนยัน</h2>
+            </div>
+          </div>
+          <div id="warning-list" class="warning-list skeleton-lines" aria-live="polite"></div>
+        </article>
+      </section>
+
+      <section id="recommended" class="section-block">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">OPTIMIZER XI</p>
+            <h2>ทีมเริ่มต้นที่ระบบเสนอ</h2>
+            <p>เป็น baseline จากข้อมูลล้วน คุณยังควรตรวจข่าวก่อน deadline</p>
+          </div>
+          <div id="squad-validity" class="validity-pill">กำลังตรวจสอบ</div>
+        </div>
+        <div class="pitch-shell">
+          <div class="pitch-markings" aria-hidden="true">
+            <span class="halfway"></span><span class="centre-circle"></span>
+          </div>
+          <div id="recommended-pitch" class="pitch" aria-label="ทีมตัวจริงที่แนะนำ"></div>
+        </div>
+        <div class="bench-wrap">
+          <div class="bench-label"><span>BENCH</span><small>เรียงลำดับสำรอง</small></div>
+          <div id="recommended-bench" class="bench"></div>
+        </div>
+      </section>
+
+      <section id="squad-lab" class="section-block lab-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">LOCAL SQUAD LAB</p>
+            <h2>ทดลองทีม 15 คนของคุณ</h2>
+            <p>บันทึกเฉพาะใน Browser เครื่องนี้ ไม่มีข้อมูลล็อกอินส่งออกไป</p>
+          </div>
+          <div class="button-row">
+            <button id="use-recommended" class="button button-primary" type="button">ใช้ทีมแนะนำ</button>
+            <button id="use-published" class="button button-ghost" type="button" hidden>ใช้ทีม FPL ล่าสุด</button>
+            <button id="export-squad" class="button button-ghost" type="button">ส่งออก JSON</button>
+            <button id="clear-squad" class="button button-danger" type="button">ล้างทีม</button>
+          </div>
+        </div>
+
+        <div class="lab-status-grid">
+          <div class="lab-score"><span>ผู้เล่น</span><strong id="lab-player-count">0/15</strong></div>
+          <div class="lab-score"><span>งบที่ใช้</span><strong id="lab-cost">0.0</strong></div>
+          <div class="lab-score"><span>เงินเหลือ</span><strong id="lab-bank">100.0</strong></div>
+          <div class="lab-score"><span>xP XI + C</span><strong id="lab-xp">—</strong></div>
+          <div id="lab-validity" class="lab-validity">เริ่มเลือกผู้เล่นด้านล่าง</div>
+        </div>
+
+        <div class="lab-grid">
+          <article class="panel">
+            <div class="subheading-row">
+              <h3>ทีมปัจจุบัน</h3>
+              <span id="lab-formation" class="info-chip">ยังไม่ครบ 15 คน</span>
+            </div>
+            <div id="lab-squad-list" class="lab-squad-list empty-state">
+              เลือก “ใช้ทีมแนะนำ” หรือเพิ่มผู้เล่นจากตาราง
+            </div>
+          </article>
+          <article class="panel">
+            <div class="subheading-row">
+              <h3>โอกาสอัปเกรด</h3>
+              <span class="info-chip">ไม่คิด hit</span>
+            </div>
+            <div id="swap-list" class="swap-list empty-state">
+              จะคำนวณเมื่อมีผู้เล่นในทีม
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="players" class="section-block">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">PLAYER EXPLORER</p>
+            <h2>ค้นหาและเปรียบเทียบผู้เล่น</h2>
+          </div>
+          <span id="player-result-count" class="info-chip">— คน</span>
+        </div>
+        <div class="filter-bar" role="search">
+          <label class="search-field">
+            <span class="sr-only">ค้นหาชื่อผู้เล่น</span>
+            <input id="player-search" type="search" placeholder="ค้นหาชื่อผู้เล่น…" autocomplete="off">
+          </label>
+          <label>
+            <span class="sr-only">ตำแหน่ง</span>
+            <select id="position-filter">
+              <option value="all">ทุกตำแหน่ง</option>
+              <option value="1">GKP</option><option value="2">DEF</option>
+              <option value="3">MID</option><option value="4">FWD</option>
+            </select>
+          </label>
+          <label>
+            <span class="sr-only">สโมสร</span>
+            <select id="team-filter"><option value="all">ทุกสโมสร</option></select>
+          </label>
+          <label>
+            <span class="sr-only">เรียงตาม</span>
+            <select id="sort-filter">
+              <option value="xp_next">xP Gameweek ถัดไป</option>
+              <option value="xp_horizon">xP 5 Gameweeks</option>
+              <option value="value_score">ความคุ้มค่า</option>
+              <option value="selected">Ownership</option>
+              <option value="price_asc">ราคาต่ำสุด</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ผู้เล่น</th><th>Pos</th><th>ราคา</th><th>คู่แข่ง</th><th>xP ถัดไป</th><th>xP 5 GW</th><th>Own%</th><th>Risk</th><th><span class="sr-only">เพิ่มผู้เล่น</span></th></tr>
+            </thead>
+            <tbody id="player-table-body"></tbody>
+          </table>
+        </div>
+        <button id="show-more" class="button button-ghost show-more" type="button">แสดงเพิ่ม</button>
+      </section>
+
+      <section id="ai-briefing" class="section-block ai-section">
+        <div class="ai-copy">
+          <p class="eyebrow">CHATGPT PLUS — NO API BILL</p>
+          <h2>ให้ AI ตรวจบริบทที่ตัวเลขมองไม่เห็น</h2>
+          <p>
+            ระบบเตรียม briefing ขนาดเล็กพร้อมคำสั่งไว้แล้ว นำไปวางใน ChatGPT Plus
+            เพื่อเช็กข่าวบาดเจ็บ, press conference และ predicted lineup ล่าสุด
+          </p>
+          <ol class="step-list">
+            <li><span>1</span><div><strong>คัดลอก Briefing</strong><small>ข้อมูลทีม, xP, deadline และข้อจำกัด</small></div></li>
+            <li><span>2</span><div><strong>วางใน ChatGPT</strong><small>ขอให้ค้นเว็บและอ้างแหล่งข่าวล่าสุด</small></div></li>
+            <li><span>3</span><div><strong>ตัดสินใจเองก่อนล็อกทีม</strong><small>AI เป็นผู้ช่วย ไม่ใช่ผู้กด transfer แทน</small></div></li>
+          </ol>
+          <div class="button-row">
+            <button id="copy-briefing" class="button button-primary" type="button">คัดลอกสำหรับ ChatGPT</button>
+            <a class="button button-ghost" href="./data/briefing.md" download>ดาวน์โหลด .md</a>
+          </div>
+        </div>
+        <article class="briefing-preview">
+          <div class="terminal-bar"><span></span><span></span><span></span><small>briefing.md</small></div>
+          <pre id="briefing-preview">กำลังเตรียม briefing…</pre>
+        </article>
+      </section>
+
+      <section id="system" class="section-block system-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">SYSTEM HEALTH</p>
+            <h2>ระบบทำงานอย่างไร</h2>
+          </div>
+          <span id="system-status" class="validity-pill">กำลังตรวจ</span>
+        </div>
+        <div class="pipeline-flow" aria-label="ขั้นตอนการทำงานของระบบ">
+          <div><span>01</span><strong>FPL Public API</strong><small>อ่านอย่างเดียว</small></div>
+          <i aria-hidden="true">→</i>
+          <div><span>02</span><strong>Validate + Cache</strong><small>retry / stale fallback</small></div>
+          <i aria-hidden="true">→</i>
+          <div><span>03</span><strong>xP + Optimizer</strong><small>โปร่งใส ตรวจข้อจำกัด</small></div>
+          <i aria-hidden="true">→</i>
+          <div><span>04</span><strong>Static Dashboard</strong><small>ฟรีและ offline ได้</small></div>
+        </div>
+        <div id="diagnostics" class="diagnostics"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>FPL Decision Lab</strong><span>สร้างเพื่อเล่น FPL อย่างมีระบบ</span></div>
+      <p>ไม่มีส่วนเกี่ยวข้องกับ Premier League • ไม่เก็บรหัสผ่าน • ข้อมูลอาจล่าช้า โปรดตรวจ FPL ก่อน deadline</p>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <noscript>Dashboard นี้ต้องเปิด JavaScript เพื่ออ่านข้อมูลและใช้งาน Squad Lab</noscript>
+    <script src="./assets/app.js?v=7" defer></script>
+  </body>
+</html>
