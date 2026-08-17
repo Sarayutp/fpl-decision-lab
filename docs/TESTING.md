@@ -49,8 +49,13 @@ python -m pip install -e '.[dev]'
 
 ### Dashboard ขึ้น “โหลดข้อมูลไม่สำเร็จ”
 
-อย่าเปิด `file://.../index.html` ให้รัน `./scripts/run_local.sh` และเปิด URL
-`http://127.0.0.1:8000`
+สำหรับการใช้งานทั่วไปให้เปิด
+[Dashboard ออนไลน์](https://sarayutp.github.io/fpl-decision-lab/) และ refresh หนึ่งครั้ง
+หากยังไม่สำเร็จ ให้ตรวจ
+[GitHub Actions](https://github.com/Sarayutp/fpl-decision-lab/actions/workflows/deploy-pages.yml)
+
+สำหรับการทดสอบ local อย่าเปิด `file://.../index.html` ให้รัน
+`./scripts/run_local.sh` และเปิด `http://127.0.0.1:8000`
 
 ### FPL API 404 ที่ picks
 
@@ -74,4 +79,3 @@ python -m http.server 8080 --directory dist
 ```
 
 แล้วเปิด `http://127.0.0.1:8080`
-

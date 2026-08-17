@@ -1,14 +1,23 @@
 # FPL Decision Lab
 
-ระบบช่วยตัดสินใจ Fantasy Premier League แบบฟรี โปร่งใส และ local-first สำหรับ
+ระบบช่วยตัดสินใจ Fantasy Premier League แบบฟรี โปร่งใส และ web-first สำหรับ
 ทีม `3647781` ใช้ข้อมูลสาธารณะจาก FPL โดยไม่ขอรหัสผ่านหรือ session cookie
 
 ระบบครบระยะที่ 1–7 แล้ว: data pipeline, xP model, optimizer, Dashboard/PWA,
 ChatGPT Plus briefing, GitHub Actions/Pages, tests และคู่มือ
 
-Dashboard ออนไลน์: [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
+## เปิดใช้งานทันที
 
-## เริ่มใช้งานบน Mac
+**Dashboard ออนไลน์:** [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
+
+ไม่ต้องเปิด MacBook และไม่ต้องติดตั้งโปรแกรม GitHub Actions จะดึงข้อมูล FPL,
+คำนวณ xP/optimizer, ทดสอบ และ deploy หน้าใหม่ให้อัตโนมัติประมาณเวลา 01:17,
+07:17, 13:17 และ 19:17 น. ตามเวลาไทย
+
+ทีมที่ทดลองใน Squad Lab เก็บใน Browser ของอุปกรณ์นั้น หากเปลี่ยน Browser/อุปกรณ์
+ให้กด `ส่งออก JSON` เพื่อเก็บรายชื่อไว้อ้างอิงก่อน ระบบออนไลน์ไม่เข้าไปแก้ทีมจริงใน FPL
+
+## ใช้งานบน Mac (ทางเลือกสำหรับพัฒนา/ทดสอบ)
 
 ต้องมี Python 3.11 ขึ้นไป จาก Terminal:
 
@@ -20,7 +29,7 @@ cd /Users/sarayutp/Project/10_FPL
 จากนั้นเปิด [http://127.0.0.1:8000](http://127.0.0.1:8000) คำสั่งแรกจะสร้าง
 virtual environment และติดตั้งแพ็กเกจให้เอง กด `Control+C` เพื่อหยุด local server
 
-หากติดตั้งไว้แล้วและต้องการอัปเดตข้อมูล:
+หากต้องการทดสอบการอัปเดตข้อมูลในเครื่อง:
 
 ```bash
 ./scripts/update_data.sh
@@ -50,7 +59,7 @@ python scripts/doctor.py
 
 - [คู่มือผู้ใช้](docs/USER_GUIDE_TH.md)
 - [ใช้ร่วมกับ ChatGPT Plus](docs/CHATGPT_PLUS_GUIDE_TH.md)
-- [นำขึ้น GitHub Pages ฟรี](docs/DEPLOY_GITHUB_PAGES_TH.md)
+- [การใช้งานและอัปเดตผ่าน GitHub Pages](docs/DEPLOY_GITHUB_PAGES_TH.md)
 - [สถาปัตยกรรมและระยะที่ 1–7](docs/ARCHITECTURE.md)
 - [Model card: xP และ optimizer](docs/MODEL_CARD.md)
 - [การทดสอบและแก้ปัญหา](docs/TESTING.md)

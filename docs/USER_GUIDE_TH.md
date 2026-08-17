@@ -6,12 +6,39 @@ FPL Decision Lab รวมข้อมูล FPL, โปรแกรมแข่
 ในหน้าเดียว เป้าหมายคือช่วยลดการตัดสินใจจากอารมณ์ โดยยังให้คุณเป็นคนกด transfer
 และยืนยันทีมในเว็บ FPL เองเสมอ
 
-ระบบไม่ต้องใช้ server ที่เปิดตลอดเวลา มีสองวิธีใช้งาน:
+ระบบออนไลน์พร้อมใช้งานแล้วที่:
 
-1. รันบน Mac เฉพาะตอนต้องการใช้งาน
-2. นำขึ้น GitHub Pages แล้วให้ GitHub Actions อัปเดตขณะที่ Mac ปิดอยู่
+**[https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)**
 
-## เริ่มครั้งแรกบน MacBook Air
+นี่คือวิธีใช้งานหลัก ไม่ต้องเปิด MacBook ทิ้งไว้ ไม่ต้องเปิด Terminal และไม่ต้องติดตั้ง
+Python ระบบทำงานเป็น static PWA บน GitHub Pages ส่วน GitHub Actions ทำ data
+pipeline และ deploy ให้ตามเวลา
+
+## เริ่มใช้งานผ่านเว็บ
+
+1. เปิด Dashboard จาก URL ด้านบนด้วย Chrome, Safari หรือ Browser บนมือถือ
+2. ตรวจป้ายความสดของข้อมูลด้านขวาบน
+3. ก่อน GW1 กด `ใช้ทีมแนะนำ` ใน Squad Lab แล้วปรับรายชื่อได้ตามต้องการ
+4. ก่อน deadline ใช้ส่วน `AI Briefing` เพื่อตรวจข่าวกับ ChatGPT Plus
+5. กลับไปยืนยัน transfer, XI, bench และ captain ในเว็บ FPL ด้วยตัวเอง
+
+Chrome จะแสดงปุ่มติดตั้ง `FPL Decision Lab` ทำให้เปิดเหมือนแอปได้ แต่ไม่จำเป็นต้อง
+ติดตั้งจึงจะใช้งานได้
+
+## การอัปเดตข้อมูลออนไลน์
+
+GitHub Actions อัปเดตประมาณเวลา 01:17, 07:17, 13:17 และ 19:17 น. ตามเวลาไทย
+MacBook จะปิดอยู่ก็ได้ หากต้องการข้อมูลใหม่ทันที ให้เปิด
+[หน้า Actions](https://github.com/Sarayutp/fpl-decision-lab/actions/workflows/deploy-pages.yml),
+เลือก `Run workflow` แล้วรอ job `build` และ `deploy` เป็นสีเขียว จากนั้น refresh
+Dashboard
+
+schedule ของ GitHub อาจเริ่มช้ากว่าเวลาที่กำหนดเล็กน้อย จึงควรดูป้ายความสดของข้อมูล
+ทุกครั้ง โดยเฉพาะก่อน deadline
+
+## ใช้งานแบบ local บน MacBook Air (ทางเลือก)
+
+หัวข้อนี้ใช้เฉพาะเมื่อต้องการพัฒนา ทดสอบ หรือแก้โมเดล ไม่จำเป็นสำหรับการใช้งานทั่วไป
 
 ### 1. ตรวจ Python
 
@@ -24,7 +51,7 @@ python3 --version
 ต้องเป็น 3.11 ขึ้นไป หากไม่มี Python สามารถติดตั้ง Python 3.12 ผ่าน Homebrew หรือ
 ดาวน์โหลดจาก python.org ได้
 
-### 2. เปิดระบบ
+### 2. เปิดระบบ local
 
 ```bash
 cd /Users/sarayutp/Project/10_FPL
@@ -39,7 +66,7 @@ JSON บางชนิด ต้องเปิดผ่าน local URL ข้
 
 เมื่อต้องการหยุด ให้กลับมาที่ Terminal แล้วกด `Control+C`
 
-### 3. อัปเดตข้อมูลภายหลัง
+### 3. อัปเดตข้อมูลในเครื่อง
 
 ```bash
 cd /Users/sarayutp/Project/10_FPL
@@ -98,7 +125,7 @@ chance of playing ที่ FPL เปิดเผย
 
 ### 3–5 วันก่อน deadline
 
-1. อัปเดตข้อมูล
+1. เปิด Dashboard ออนไลน์และตรวจป้ายความสดของข้อมูล
 2. ดูโปรแกรม 5 GW ไม่ไล่ตามคะแนนสัปดาห์เดียว
 3. เช็กจุดอ่อนใน Squad Lab และ swap ที่คะแนนเพิ่มจริง
 4. หลีกเลี่ยง early transfer หากผู้เล่นมีเกมกลางสัปดาห์
@@ -127,6 +154,8 @@ chance of playing ที่ FPL เปิดเผย
 
 ## ตรวจสุขภาพระบบ
 
+ส่วนนี้สำหรับนักพัฒนาเท่านั้น ผู้ใช้ Dashboard ออนไลน์ไม่ต้องรันคำสั่งเหล่านี้
+
 ```bash
 cd /Users/sarayutp/Project/10_FPL
 source .venv/bin/activate
@@ -135,4 +164,3 @@ pytest
 ```
 
 ผลปกติควรเป็น `PASS` ทุกบรรทัดและ tests ผ่านทั้งหมด
-

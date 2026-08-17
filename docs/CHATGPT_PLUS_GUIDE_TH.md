@@ -11,13 +11,16 @@
 
 ## วิธีเร็วที่สุด
 
-1. เปิด Dashboard ไปที่ `AI Briefing`
+1. เปิด [Dashboard ออนไลน์](https://sarayutp.github.io/fpl-decision-lab/) ไปที่
+   `AI Briefing`
 2. กด `คัดลอกสำหรับ ChatGPT`
 3. เปิด ChatGPT แล้ววางข้อความทั้งหมด
 4. เปิด Web Search หากไม่ได้เปิดอัตโนมัติ
 5. ให้ ChatGPT ตอบพร้อมแหล่งข่าวและเวลาอัปเดต
 
-ไฟล์เดียวกันอยู่ที่ `data/briefing.md` และดาวน์โหลดจาก Dashboard ได้
+ไฟล์เดียวกันเปิดโดยตรงได้ที่
+[data/briefing.md](https://sarayutp.github.io/fpl-decision-lab/data/briefing.md)
+และดาวน์โหลดจาก Dashboard ได้
 
 ## ตั้ง ChatGPT Project สำหรับ FPL
 

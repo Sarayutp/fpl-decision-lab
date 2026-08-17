@@ -1,11 +1,19 @@
-# นำระบบขึ้น GitHub Pages แบบฟรี
+# GitHub Pages และการอัปเดตระบบออนไลน์
 
 Repository: [https://github.com/Sarayutp/fpl-decision-lab](https://github.com/Sarayutp/fpl-decision-lab)  
 Dashboard: [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
 
-เมื่อ deploy แล้ว Dashboard และ automation ทำงานได้แม้ MacBook ปิดอยู่ GitHub Pages
+## สถานะปัจจุบัน
+
+ระบบ deploy สำเร็จแล้ว Dashboard และ automation ทำงานได้แม้ MacBook ปิดอยู่ GitHub Pages
 บนแผน Free ใช้ฟรีกับ public repository ตาม
 [เอกสาร GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+
+- Repository เป็น public และใช้สาขา `main`
+- Pages Source เป็น `GitHub Actions`
+- บังคับใช้ HTTPS แล้ว
+- CI และ deployment ทำงานสำเร็จ
+- การใช้งานทั่วไปไม่ต้องทำขั้นตอนติดตั้งด้านล่างซ้ำ
 
 ## สิ่งที่เตรียมไว้แล้ว
 
@@ -15,7 +23,15 @@ Dashboard: [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.githu
 - รองรับปุ่ม `Run workflow` สำหรับอัปเดตทันที
 - Team ID ตั้งไว้เป็น `3647781`
 
-## การติดตั้งครั้งแรก (ดำเนินการแล้ว)
+## สั่งอัปเดตทันที
+
+1. เปิด [Refresh FPL Data and Deploy Pages](https://github.com/Sarayutp/fpl-decision-lab/actions/workflows/deploy-pages.yml)
+2. กด `Run workflow`
+3. เลือกสาขา `main` และยืนยัน
+4. รอ `build` และ `deploy` เป็นสีเขียว
+5. Refresh Dashboard และตรวจป้ายความสดของข้อมูล
+
+## การติดตั้งครั้งแรกใน repository อื่น (ไม่ต้องทำกับระบบปัจจุบัน)
 
 ### 1. Repository
 
@@ -31,7 +47,7 @@ git remote add origin https://github.com/Sarayutp/fpl-decision-lab.git
 git push -u origin main
 ```
 
-### 2. เปิด GitHub Pages
+### 2. เปิด GitHub Pages ใน repository ใหม่
 
 1. เข้า repository → `Settings`
 2. เลือก `Pages`

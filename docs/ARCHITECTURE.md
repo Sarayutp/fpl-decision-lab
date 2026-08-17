@@ -19,6 +19,11 @@ flowchart LR
 ไม่มี application server หรือ database กลาง หน้าเว็บอ่าน static JSON และเก็บทีมทดลอง
 ใน Browser เท่านั้น
 
+Production entrypoint คือ
+[https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
+GitHub Actions ทำ pipeline และ deploy จึงไม่พึ่ง MacBook ที่เปิดค้างไว้ การรัน local
+มีไว้สำหรับพัฒนาและทดสอบเท่านั้น
+
 ## ระยะที่ 1 — Data foundation
 
 - FPL base URL: `https://fantasy.premierleague.com/api/`
@@ -96,4 +101,3 @@ tests/             automated tests
 docs/              user and technical manuals
 scripts/           one-command local run/update/doctor
 ```
-
