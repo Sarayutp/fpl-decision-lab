@@ -82,6 +82,7 @@
         <nav class="section-shortcuts" aria-label="เครื่องมือประจำ Gameweek">
           <a href="#risk-desk">News & Risk</a><a href="#recommended">XI ของฉัน</a>
           <a href="#squad-lab">Squad Lab</a><a href="#ai-briefing">AI Briefing</a><a href="#decision-log">ประวัติการตัดสินใจ</a>
+          <a href="#scenario-comparison">เทียบแผน A/B</a>
         </nav>
         <div class="decision-heading">
           <div>
@@ -349,6 +350,34 @@
         </div>
       </section>
 
+      <section id="scenario-comparison" class="section-block" aria-labelledby="compare-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">COMPARE PLANS • PHASE 7A</p><h2 id="compare-title">เทียบแผน A/B ก่อนตัดสินใจ</h2>
+          <p>เลือกชิปและเส้นทางใน Planner → เก็บเป็น A → เปลี่ยนฉบับร่าง → เก็บเป็น B</p></div>
+          <a class="button button-ghost" href="#chip-planner">กลับไปเลือกแผนใน Planner</a>
+        </div>
+        <p id="compare-status" role="status"></p>
+        <p id="compare-draft-status" class="planner-note" aria-live="polite"></p>
+        <label class="decision-note-label" for="compare-label">ชื่อแผนที่จะเก็บ (ไม่บังคับ)</label>
+        <input id="compare-label" class="compare-label-input" type="text" maxlength="120" placeholder="เช่น เก็บชิปรอข่าว หรือ เส้นทางสำรอง">
+        <div class="button-row compare-actions">
+          <button id="compare-capture-a" class="button button-primary" type="button" disabled>เก็บฉบับร่างเป็น A</button>
+          <button id="compare-capture-b" class="button button-ghost" type="button" disabled>เก็บฉบับร่างเป็น B</button>
+          <button id="compare-export" class="button button-ghost" type="button" disabled>ส่งออกแผน A/B JSON</button>
+        </div>
+        <p class="planner-note">เก็บได้สองช่องต่อทีม/ฤดูกาล/GW • การแทนที่ทับเฉพาะช่องนั้น ควรส่งออกก่อน • ยังไม่รองรับนำเข้าไฟล์</p>
+        <div id="compare-board" class="compare-board"></div>
+        <p id="compare-difference" class="compare-difference" role="status" data-comparable="false"></p>
+        <p class="planner-note">เปรียบเทียบเฉพาะ GW นี้ ไม่รวมมูลค่าชิป/FT และผลจากการย้ายตัวใน GW อื่น คะแนนสูงกว่าไม่ได้แปลว่าคุ้มกว่าในระยะยาว และไม่ใช่การแนะนำให้ติดลบหรือใช้ชิป</p>
+        <p class="table-help" id="compare-table-help">บนมือถือเลื่อนตารางแนวนอนเพื่อดู A/B คู่กัน • ตัวเลขที่เก็บไม่เปลี่ยนตามข่าวใหม่ ต้องเก็บแผนใหม่เมื่อต้องการเทียบอีกครั้ง</p>
+        <div id="compare-table-wrap" class="table-wrap compare-table-wrap" tabindex="0" role="region" aria-label="ตารางเปรียบเทียบแผน A/B" aria-describedby="compare-table-help" hidden>
+          <table class="compare-table"><caption class="sr-only">แผน A และ B: คะแนนสุทธิ ชิป ย้ายตัว งบ XI และความเสี่ยงของ Gameweek ปัจจุบัน</caption>
+            <thead><tr><th scope="col">สิ่งที่เปรียบเทียบ</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+            <tbody id="compare-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
       <section id="decision-log" class="section-block" aria-labelledby="decision-log-title">
         <div class="section-heading">
           <div><p class="eyebrow">LOCAL DECISION JOURNAL</p><h2 id="decision-log-title">บันทึกก่อน deadline ทบทวนหลังจบ GW</h2>
@@ -513,6 +542,7 @@
     <noscript>Dashboard นี้ต้องเปิด JavaScript เพื่ออ่านข้อมูลและใช้งาน Squad Lab</noscript>
     <script src="./assets/runtime.js?v=20" defer></script>
     <script src="./assets/decision-log.js?v=20" defer></script>
+    <script src="./assets/scenario-compare.js?v=21" defer></script>
     <script src="./assets/app.js?v=20" defer></script>
   </body>
 </html>

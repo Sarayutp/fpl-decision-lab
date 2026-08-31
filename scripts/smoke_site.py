@@ -57,6 +57,10 @@ def check_site(target: str, expected_build: str | None = None) -> dict:
     if info["build_id"] not in payloads["sw.js"].decode():
         raise ValueError("Service-worker build mismatch")
     index = payloads["index.html"].decode()
+    # New assets must be covered, while archived Phase 6 releases remain restorable.
+    linked_assets = set(re.findall(r'(?:src|href)="\./(assets/[^"?]+)(?:\?[^\"]*)?"', index))
+    if not linked_assets.issubset(hashes):
+        raise ValueError("Referenced assets missing from release manifest")
     for anchor in ["this-gameweek", "transfer-advisor", "chip-planner", "decision-log", "players", "system", "runtime-state"]:
         if f'id="{anchor}"' not in index:
             raise ValueError(f"Missing page section: {anchor}")

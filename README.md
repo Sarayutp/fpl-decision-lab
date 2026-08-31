@@ -21,6 +21,10 @@ Python 60, JavaScript 20 และ browser E2E 26 cases ผ่านใน CI �
 
 ## เปิดใช้งานทันที
 
+Phase 7A เพิ่มหน้าเปรียบเทียบฉบับร่าง Planner แบบ A/B เฉพาะ GW ปัจจุบัน
+พร้อมตรวจ context และเก็บใน Browser; ส่วนนี้อยู่ระหว่างตรวจ release `2.1.0-rc.1`
+ดู [ผลตรวจและขอบเขต](docs/PHASE_7A_QA.md). Phase 7 ส่วนอื่นยังไม่ได้เริ่ม
+
 **Dashboard ออนไลน์:** [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
 
 ถ้าเห็นหน้าเว็บรุ่นเก่าหรือ `Unsupported schema version 2` ให้ refresh อีกครั้งเพื่อรับ

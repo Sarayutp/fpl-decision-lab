@@ -56,7 +56,7 @@ test('journal captures a frozen legal XV with C/VC, bench and provenance',()=>{
   run('state.plannerSettings.selectedChip="triple_captain";savePlannerSettings();const tcRecord=createDecisionRecord();');
   assert.equal(run('tcRecord.expectedPoints'),run('Math.round((record.expectedPoints + record.lineup.triple_captain_gain)*100)/100'));
   const expected=run('record.expectedPoints');run('state.projectionById.clear()');assert.equal(run('loadDecisionLog().entries[0].expectedPoints'),expected);
-  assert.equal(run('loadDecisionLog().entries[0].release'),'2.0.0-rc.1');
+  assert.equal(run('loadDecisionLog().entries[0].release'),run('APP_RELEASE'));
 });
 test('journal isolates accounts and seasons and rejects corrupt data without overwrite',()=>{
   const {run,storage}=setup();run('persistDecisionLog([createDecisionRecord()])');
