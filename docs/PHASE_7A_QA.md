@@ -20,6 +20,17 @@ future moves แสดงแยกและไม่นับในตัวเ�
 - artifact รุ่นใหม่ตรวจ 10 ไฟล์; smoke checker ยังอ่าน artifact Phase 6 เดิม 9 ไฟล์ได้
 - ชุด browser เตรียม 38 cases รวม capture/reload/export/delete, เปลี่ยนงบ และ stale/offline/deadline/mismatch
 - ยังรอผล CI และ published smoke ของ commit รุ่นนี้ก่อนปิดงาน
+- Browser จริงบน QA origin: เก็บ A/B, โหลดใหม่, แสดง delta 0 สำหรับแผนเหมือนกัน และเปลี่ยน FT แล้วทั้งสองแผนเป็น `changed`/ไม่แสดง delta
+- 375px: root overflow 0, unlabeled controls 0, ready ของ fixture ประมาณ 325ms; ตรวจหน้าตามือถือและ desktop แล้ว ไม่ใช่ Core Web Vitals บนอุปกรณ์จริง
+
+## CI stability
+
+CI แรกรายงาน 37 ผ่าน + 1 flaky: `chromium_headless_shell` รับ SIGSEGV ระหว่าง mobile context
+ไม่ใช่ assertion ของ A/B ที่ตก จึงเปลี่ยนเป็น full Chromium new headless (`channel: chromium`)
+และเปิด `failOnFlakyTests` ให้ release ไม่ผ่านหากยังต้อง retry ตาม
+[เอกสาร browser channels](https://playwright.dev/docs/browsers) และ
+[การบังคับ fail เมื่อ flaky](https://playwright.dev/docs/api/class-testconfig#test-config-fail-on-flaky-tests).
+ต้องยืนยันผลใหม่ก่อนเผยแพร่ ไม่ถือว่ารอบ 37+1 เป็น clean pass
 
 ## ข้อจำกัด
 
