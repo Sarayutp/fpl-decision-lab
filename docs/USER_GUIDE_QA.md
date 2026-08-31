@@ -18,10 +18,11 @@
 - Python 76 tests และ JavaScript 47 tests ผ่าน; JS syntax / build / smoke / asset budgets ผ่าน
 - unit tests ตรวจ H1 เดียว H2 ต่อเนื่องครบ 22, escape HTML, ปิด images/unsafe links,
   TOC และลิงก์กลับทุก section, guide ใน manifest และ rollback-compatible legacy manifest
-- Browser จริงตรวจ desktop และ 375px: เมนู สารบัญ และฟอนต์ไทย; ไม่มี page overflow
+- Browser จริงตรวจ desktop, 768px และ 375px: เมนู สารบัญ ตาราง และฟอนต์ไทย; ไม่มี page overflow
+- เปิดเมนูคู่มือจาก Dashboard ที่ HTTP 503 ได้ โดยไม่โหลดข้อมูลทีมในหน้าคู่มือ
 - Browser E2E 68 cases เตรียมพร้อม โดย 16 cases ใหม่ตรวจ help/error/no-JS/no-data/download/
   native-print invocation/print CSS/375-768-1280px/keyboard/service-worker offline isolation
-- asset budget เดิมไม่เพิ่ม: JS 189,296 / CSS 56,257 / snapshot 2,714,121 bytes
+- asset budget เดิมไม่เพิ่ม: JS 189,296 / CSS 56,341 / snapshot 2,714,121 bytes
 
 ## รอการตรวจรับ
 

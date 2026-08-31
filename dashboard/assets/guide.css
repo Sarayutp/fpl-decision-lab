@@ -29,7 +29,7 @@
 .guide-content pre { white-space: pre-wrap; padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .guide-content table { table-layout: fixed; width: 100%; margin: 22px 0; font-size: 15px; border-collapse: collapse; }
 .guide-content table th, .guide-content table td { white-space: normal; overflow-wrap: anywhere; text-align: left; padding: 14px 12px; vertical-align: top; line-height: 1.85; }
-.guide-content table th { color: var(--green); background: var(--surface-2); }
+.guide-content table th { color: var(--green); background: var(--surface-2); font-size: inherit; font-weight: 700; letter-spacing: normal; text-transform: none; }
 .guide-end { display: flex; flex-wrap: wrap; gap: 12px; padding: 38px 0; border-top: 1px solid var(--line); margin-top: 36px; }
 @media (max-width: 1050px) { .guide-sidebar { top: 145px; } .guide-content h2 { scroll-margin-top: 150px; } }
 @media (max-width: 820px) {

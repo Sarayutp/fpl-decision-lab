@@ -67,6 +67,7 @@ for (const width of [375,768,1280]) {
     await page.setViewportSize({width,height:900});
     await page.goto('/guide.html');
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
+    expect(await page.locator('.guide-content th').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(13);
     for (const control of await page.locator('button:visible,summary:visible').all()) await expect(control).toHaveAccessibleName(/\S/);
     await page.keyboard.press('Tab');
     await expect(page.locator('.skip-link')).toBeFocused();
