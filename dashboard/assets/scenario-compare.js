@@ -228,6 +228,7 @@ function renderComparison() {
   ];
   $("#compare-table-body").innerHTML = rows.map(([label,value]) => `<tr><th scope="row">${esc(label)}</th>${COMPARISON_SLOTS.map(slot=>`<td>${slots[slot] ? esc(value(slots[slot])) : "—"}</td>`).join("")}</tr>`).join("");
   $("#compare-table-wrap").hidden = !Object.values(slots).some(Boolean);
+  syncDecisionCard();
 }
 
 function bindComparisonEvents() {

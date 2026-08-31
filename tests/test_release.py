@@ -48,19 +48,22 @@ def test_smoke_rejects_a_mixed_or_modified_release(tmp_path):
         smoke.check_site(str(tmp_path / "site"))
 
 
-def test_smoke_covers_new_linked_assets_but_accepts_legacy_manifests(tmp_path):
+@pytest.mark.parametrize("module", ["scenario-compare", "decision-card"])
+def test_smoke_covers_new_linked_assets_but_accepts_legacy_manifests(tmp_path, module):
     fixture_build(tmp_path)
     site = tmp_path / "site"
     info_path = site / "build-info.json"
     info = json.loads(info_path.read_text())
-    del info["asset_sha256"]["assets/scenario-compare.js"]
+    del info["asset_sha256"][f"assets/{module}.js"]
     info_path.write_text(json.dumps(info))
     with pytest.raises(ValueError, match="Referenced assets"):
         smoke.check_site(str(site))
     # Legacy Phase 6 HTML did not reference the comparison module. Keep its 9-file contract valid.
     import hashlib
     import re
-    index = re.sub(r'\s*<script src="\./assets/scenario-compare\.js[^\"]*" defer></script>', "", (site / "index.html").read_text())
+    index = re.sub(r'\s*<script src="\./assets/(?:scenario-compare|decision-card)\.js[^\"]*" defer></script>', "", (site / "index.html").read_text())
+    for name in ("scenario-compare", "decision-card"):
+        info["asset_sha256"].pop(f"assets/{name}.js", None)
     (site / "index.html").write_text(index)
     info["asset_sha256"]["index.html"] = hashlib.sha256(index.encode()).hexdigest()
     info_path.write_text(json.dumps(info))

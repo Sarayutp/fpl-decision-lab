@@ -1,6 +1,6 @@
 "use strict";
 
-const APP_RELEASE = "2.1.0-rc.1";
+const APP_RELEASE = "2.2.0-rc.1";
 const SNAPSHOT_SCHEMA = 2;
 
 function snapshotCompatibility(data) {

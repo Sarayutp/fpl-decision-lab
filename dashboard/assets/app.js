@@ -2227,6 +2227,7 @@ function bindEvents() {
   });
   bindDecisionLogEvents();
   bindComparisonEvents();
+  bindDecisionCardEvents();
 }
 
 async function boot() {

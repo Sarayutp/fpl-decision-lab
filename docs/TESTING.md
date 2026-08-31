@@ -1,12 +1,16 @@
 # Testing, Debugging and Troubleshooting
 
-## Phase 6 release checks
+## Release checks
+
+Phase 7B เพิ่ม card/privacy tests 11 ข้อ (JS รวม 44), ตรวจ linked asset อีกหนึ่งกรณี
+(Python รวม 62) และ browser card flow อีก 14 cases (รวม 52).
+ผลตรวจและสถานะรอเผยแพร่: [PHASE_7B_QA.md](PHASE_7B_QA.md)
 
 Phase 7A เพิ่ม comparison logic tests 13 ข้อ (JS รวม 33), Python legacy-manifest test
 (รวม 61) และ browser A/B flow เพิ่ม 12 cases (desktop/mobile รวม 38).
 ผลตรวจรุ่นนี้: [PHASE_7A_QA.md](PHASE_7A_QA.md); ตัวเลข Phase 6 ด้านล่างเป็นหลักฐานของรุ่นก่อน
 
-ผลล่าสุดและข้อที่ยังรอ: [PHASE_6_QA.md](PHASE_6_QA.md)
+ผลย้อนหลัง Phase 6: [PHASE_6_QA.md](PHASE_6_QA.md)
 
 ```bash
 pytest

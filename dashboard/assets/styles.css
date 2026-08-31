@@ -15,6 +15,15 @@
 .compare-table tbody th { text-align: left; color: var(--muted); font-weight: 600; }
 @media (max-width: 600px) { .compare-board { grid-template-columns: 1fr; } .compare-actions .button { width: 100%; } }
 
+.share-card-panel { margin-top: 28px; }
+.share-card-panel > summary { font-size: 20px; font-weight: 700; cursor: pointer; }
+.share-card-panel > p { color: var(--muted); }
+.share-card-preview-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+#share-card-image { width: 100%; max-width: 540px; height: auto; border: 1px solid var(--line); border-radius: 14px; }
+#share-card-text { font: inherit; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+#share-card-slot { color: var(--ink); background: var(--surface-2); padding: 8px 16px; border: 1px solid var(--line); border-radius: 10px; }
+@media (max-width: 700px) { .share-card-preview-grid { grid-template-columns: 1fr; } }
+
 :root {
   color-scheme: dark;
   --ink: #edf8f2;

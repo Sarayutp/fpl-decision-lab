@@ -29,7 +29,7 @@ document.querySelector('#load').addEventListener('click',()=>{
   frame.src=`/?qaState=${encodeURIComponent(document.querySelector('#scenario').value)}&preview=${Date.now()}`;
 });
 document.querySelector('#inspect').addEventListener('click',inspect);
-document.querySelector('#show-section').addEventListener('click',()=>{frame.contentDocument?.getElementById(document.querySelector('#section').value)?.scrollIntoView();frame.scrollIntoView();});
+document.querySelector('#show-section').addEventListener('click',()=>{const target=frame.contentDocument?.getElementById(document.querySelector('#section').value);if(target?.tagName==='DETAILS') target.open=true;target?.scrollIntoView();frame.scrollIntoView();});
 frame.addEventListener('load',()=>{
   const timer=setInterval(()=>{const state=frame.contentDocument?.querySelector('#runtime-state')?.dataset.kind;
     if(state && state!=='loading' || performance.now()-started>12000){clearInterval(timer);inspect();}},100);
