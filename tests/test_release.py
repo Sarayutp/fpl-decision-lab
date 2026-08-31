@@ -1,0 +1,69 @@
+from __future__ import annotations
+
+import base64
+import gzip
+import importlib.util
+import json
+import shutil
+from pathlib import Path
+
+import pytest
+
+from fpl_mvp.site import build_site
+
+ROOT = Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location("smoke_site", ROOT / "scripts/smoke_site.py")
+smoke = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(smoke)
+
+
+def fixture_build(tmp_path, stamp="2026-08-31T00:00:00+00:00"):
+    data = json.loads(gzip.decompress(base64.b64decode((ROOT / "tests/fixtures/owned-team-gw3.json.gz.b64").read_text())))
+    data["generated_at"] = stamp
+    data_path = tmp_path / "latest.json"; data_path.write_text(json.dumps(data))
+    briefing = tmp_path / "briefing.md"
+    briefing.write_text(f"- Team ID: 990001\n- เป้าหมาย: Gameweek 3\n- สร้างเมื่อ: {stamp}\n")
+    info = build_site(dashboard_dir=ROOT / "dashboard", data_path=data_path, briefing_path=briefing, output_dir=tmp_path / "site")
+    return info
+
+
+def test_local_release_smoke_and_artifact_rollback(tmp_path):
+    original = fixture_build(tmp_path)
+    archive = tmp_path / "saved-release"
+    shutil.copytree(tmp_path / "site", archive)
+    newer = fixture_build(tmp_path, "2026-08-31T02:00:00+00:00")
+    assert newer["build_id"] != original["build_id"]
+    assert smoke.check_site(str(tmp_path / "site"), newer["build_id"])["status"] == "passed"
+    # Rehearse restoration in isolated test directories; never touch a working deployment.
+    restored = tmp_path / "restored"
+    shutil.copytree(archive, restored)
+    assert smoke.check_site(str(restored), original["build_id"])["status"] == "passed"
+    assert json.loads((restored / "data/latest.json").read_text())["generated_at"] == original["data_generated_at"]
+
+
+def test_smoke_rejects_a_mixed_or_modified_release(tmp_path):
+    fixture_build(tmp_path)
+    (tmp_path / "site/assets/app.js").write_text("broken")
+    with pytest.raises(ValueError, match="hash mismatch"):
+        smoke.check_site(str(tmp_path / "site"))
+
+
+def test_build_rejects_same_team_same_gw_but_old_briefing(tmp_path):
+    fixture_build(tmp_path)
+    (tmp_path / "briefing.md").write_text("- Team ID: 990001\n- เป้าหมาย: Gameweek 3\n- สร้างเมื่อ: 2000-01-01\n")
+    with pytest.raises(ValueError, match="timestamp"):
+        build_site(dashboard_dir=ROOT / "dashboard", data_path=tmp_path / "latest.json", briefing_path=tmp_path / "briefing.md", output_dir=tmp_path / "site")
+
+
+def test_frontend_release_matches_package_metadata():
+    from fpl_mvp.release import RELEASE_VERSION
+    assert f'APP_RELEASE = "{RELEASE_VERSION}"' in (ROOT / "dashboard/assets/runtime.js").read_text()
+
+
+def test_restore_requires_a_successful_main_deployment():
+    restore_spec = importlib.util.spec_from_file_location("verify_restore", ROOT / "scripts/verify_restore.py")
+    restore = importlib.util.module_from_spec(restore_spec); restore_spec.loader.exec_module(restore)
+    valid = {"conclusion":"success", "head_branch":"main", "path":".github/workflows/deploy-pages.yml", "event":"push", "head_repository":{"full_name":"owner/repo"}}
+    restore.validate_run(valid, "owner/repo")
+    for field, value in [("conclusion","failure"),("head_branch","feature"),("path",".github/workflows/ci.yml"),("event","pull_request"),("head_repository",{"full_name":"fork/repo"})]:
+        with pytest.raises(ValueError): restore.validate_run({**valid, field:value}, "owner/repo")

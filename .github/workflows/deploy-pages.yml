@@ -3,14 +3,21 @@ name: Refresh FPL Data and Deploy Pages
 on:
   workflow_dispatch:
   schedule:
-    # 07:17, 13:17, 19:17 and 01:17 in Bangkok (UTC+7).
+    # Routine refreshes at 01:17, 07:17, 13:17 and 19:17 Bangkok.
     - cron: "17 0,6,12,18 * * *"
+    # Extra refresh at 23:17 Bangkok, about 73 minutes before a common 00:30 deadline.
+    - cron: "17 16 * * *"
   push:
     branches: [main]
     paths:
       - "dashboard/**"
+      - "data/risk-evidence.json"
       - "src/**"
+      - "scripts/**"
+      - "tests/**"
       - "pyproject.toml"
+      - "package*.json"
+      - "playwright.config.cjs"
       - ".github/workflows/deploy-pages.yml"
 
 permissions:
@@ -25,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      FPL_TEAM_ID: "3647781"
+      FPL_TEAM_ID: ${{ vars.FPL_TEAM_ID || '5105794' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -39,9 +46,29 @@ jobs:
       - name: Install
         run: python -m pip install -e '.[dev]'
       - name: Test before publishing
-        run: pytest
+        run: |
+          pytest
+          node --test tests/*.test.cjs
+          for file in dashboard/assets/*.js dashboard/sw.js; do node --check "$file"; done
       - name: Refresh public FPL data and build site
         run: python -m fpl_mvp all --force-refresh
+      - name: Release smoke and payload gates
+        run: |
+          python scripts/smoke_site.py dist
+          python scripts/check_frontend.py
+      - name: Browser end-to-end release gate
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          python scripts/qa_server.py --port 8011 > /tmp/fpl-qa-server.log 2>&1 &
+          npm run test:e2e
+      - name: Keep validated release for rollback
+        uses: actions/upload-artifact@v4
+        with:
+          name: validated-site
+          path: dist
+          include-hidden-files: true
+          retention-days: 30
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -58,7 +85,17 @@ jobs:
       pages: write
       id-token: write
     steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: validated-site
+          path: release-check
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
+      - name: Verify the published release
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          BUILD_ID=$(python -c 'import json; print(json.load(open("release-check/build-info.json"))["build_id"])')
+          python scripts/smoke_site.py "$PAGE_URL" --expected-build "$BUILD_ID"

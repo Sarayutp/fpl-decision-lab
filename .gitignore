@@ -15,3 +15,7 @@ data/*.tmp
 dist/
 .playwright-cli/
 output/playwright/
+node_modules/
+test-results/
+playwright-report/
+output/qa/

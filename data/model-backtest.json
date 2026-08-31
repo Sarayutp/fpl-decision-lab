@@ -1,0 +1,401 @@
+{
+  "version": "rolling-backtest-1.0",
+  "status": "insufficient_history",
+  "sample_count": 40,
+  "player_count": 40,
+  "evaluated_gameweeks": [
+    2
+  ],
+  "minimum_evaluation_gameweeks": 3,
+  "leakage_guard": "Every training round is strictly lower than its target round.",
+  "leakage_violations": 0,
+  "metrics": {
+    "v2": {
+      "mae": 2.8029,
+      "rank_correlation": 0.2526,
+      "top_k_hit_rate": 0.3
+    },
+    "price_role_prior": {
+      "mae": 2.7682,
+      "rank_correlation": 0.3057,
+      "top_k_hit_rate": 0.4
+    },
+    "recent_points": {
+      "mae": 4.275,
+      "rank_correlation": 0.0932,
+      "top_k_hit_rate": 0.4
+    }
+  },
+  "v2_beats_both_baselines_on_mae_and_rank": false,
+  "limitations": [
+    "Historical FPL ep_next is not available from element-summary and is not backfilled.",
+    "Results are not decision-ready until the minimum number of evaluation Gameweeks is met."
+  ],
+  "prediction_audit": [
+    {
+      "player_id": 411,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 13.0,
+      "v2": 6.1834,
+      "price_role_prior": 6.8,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 165,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.3299,
+      "price_role_prior": 2.7,
+      "recent_points": 11.0
+    },
+    {
+      "player_id": 426,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 5.0076,
+      "price_role_prior": 5.4778,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 368,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 4.0,
+      "v2": 3.2301,
+      "price_role_prior": 2.8264,
+      "recent_points": 8.0
+    },
+    {
+      "player_id": 8,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.2064,
+      "price_role_prior": 2.776,
+      "recent_points": 9.0
+    },
+    {
+      "player_id": 1,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.5922,
+      "price_role_prior": 3.4531,
+      "recent_points": 6.0
+    },
+    {
+      "player_id": 427,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.2912,
+      "price_role_prior": 3.399,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 4,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 4.311,
+      "price_role_prior": 4.4106,
+      "recent_points": 5.0
+    },
+    {
+      "player_id": 346,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.085,
+      "price_role_prior": 2.0125,
+      "recent_points": 1.0
+    },
+    {
+      "player_id": 557,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.7988,
+      "price_role_prior": 2.5593,
+      "recent_points": 6.0
+    },
+    {
+      "player_id": 40,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.4564,
+      "price_role_prior": 3.1063,
+      "recent_points": 8.0
+    },
+    {
+      "player_id": 397,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 5.0,
+      "v2": 3.5276,
+      "price_role_prior": 3.7046,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 496,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 1.0,
+      "v2": 2.3821,
+      "price_role_prior": 2.3538,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 109,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.6485,
+      "price_role_prior": 2.3538,
+      "recent_points": 6.0
+    },
+    {
+      "player_id": 387,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 2.0,
+      "v2": 3.3988,
+      "price_role_prior": 3.6867,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 388,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 2.0,
+      "v2": 3.7202,
+      "price_role_prior": 3.2153,
+      "recent_points": 10.0
+    },
+    {
+      "player_id": 356,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 1.0,
+      "v2": 3.449,
+      "price_role_prior": 3.6867,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 423,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.005,
+      "price_role_prior": 1.9933,
+      "recent_points": 1.0
+    },
+    {
+      "player_id": 497,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 1.6159,
+      "price_role_prior": 2.03,
+      "recent_points": 0.0
+    },
+    {
+      "player_id": 154,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 4.9185,
+      "price_role_prior": 4.3542,
+      "recent_points": 13.0
+    },
+    {
+      "player_id": 259,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 1.7681,
+      "price_role_prior": 1.65,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 13,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.0433,
+      "price_role_prior": 3.1063,
+      "recent_points": 3.0
+    },
+    {
+      "player_id": 418,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.3224,
+      "price_role_prior": 2.3687,
+      "recent_points": 1.0
+    },
+    {
+      "player_id": 106,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.8281,
+      "price_role_prior": 2.9514,
+      "recent_points": 0.0
+    },
+    {
+      "player_id": 379,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 8.0,
+      "v2": 3.4414,
+      "price_role_prior": 3.4875,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 237,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 4.0,
+      "v2": 2.8107,
+      "price_role_prior": 2.3051,
+      "recent_points": 9.0
+    },
+    {
+      "player_id": 391,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 5.0,
+      "v2": 3.2338,
+      "price_role_prior": 2.776,
+      "recent_points": 9.0
+    },
+    {
+      "player_id": 399,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 14.0,
+      "v2": 2.8132,
+      "price_role_prior": 3.1063,
+      "recent_points": 8.0
+    },
+    {
+      "player_id": 412,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.5925,
+      "price_role_prior": 2.6989,
+      "recent_points": 1.0
+    },
+    {
+      "player_id": 499,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 1.0,
+      "v2": 2.1992,
+      "price_role_prior": 2.776,
+      "recent_points": 0.0
+    },
+    {
+      "player_id": 175,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 2.0,
+      "v2": 1.7092,
+      "price_role_prior": 1.65,
+      "recent_points": 1.0
+    },
+    {
+      "player_id": 124,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.1296,
+      "price_role_prior": 2.0637,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 552,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.0829,
+      "price_role_prior": 2.0125,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 15,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 3.1352,
+      "price_role_prior": 2.5593,
+      "recent_points": 11.0
+    },
+    {
+      "player_id": 366,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 4.0,
+      "v2": 2.9642,
+      "price_role_prior": 3.1063,
+      "recent_points": 2.0
+    },
+    {
+      "player_id": 31,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 1.5854,
+      "price_role_prior": 1.9933,
+      "recent_points": 0.0
+    },
+    {
+      "player_id": 212,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 1.2908,
+      "price_role_prior": 1.6194,
+      "recent_points": 0.0
+    },
+    {
+      "player_id": 12,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 4.5849,
+      "price_role_prior": 4.3542,
+      "recent_points": 9.0
+    },
+    {
+      "player_id": 115,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.6751,
+      "price_role_prior": 1.9933,
+      "recent_points": 17.0
+    },
+    {
+      "player_id": 142,
+      "target_gameweek": 2,
+      "trained_through_gameweek": 1,
+      "actual_points": 0.0,
+      "v2": 2.577,
+      "price_role_prior": 2.776,
+      "recent_points": 0.0
+    }
+  ],
+  "selection": {
+    "method": "highest current ownership",
+    "requested_player_limit": 40,
+    "player_count": 40
+  }
+}

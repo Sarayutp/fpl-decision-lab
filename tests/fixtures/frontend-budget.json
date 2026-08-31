@@ -1,0 +1,7 @@
+{
+  "recorded_at": "2026-08-31",
+  "basis": "Initial Phase 6 regression baseline for raw wire sizes. No historical Phase 5 timing baseline was recorded, so no before/after speed claim is made.",
+  "budgets": {"javascript_bytes": 190000, "css_bytes": 60000, "snapshot_bytes": 3500000},
+  "browser_budgets": {"viewport_widths": [375, 768, 1280], "ready_ms": 10000, "horizontal_overflow_px": 1, "primary_text_contrast_ratio": 4.5},
+  "notes": "Phase 6 initial baseline. Real-user performance and a manual screen-reader audit remain separate from automated gates."
+}

@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+
+import pytest
 
 from fpl_mvp.api import FPLNotFound
 from fpl_mvp.models import BootstrapStatic, Entry, EntryHistory, Fixture, PicksResponse
-from fpl_mvp.pipeline import build_snapshot, latest_published_gameweek
+from fpl_mvp.pipeline import TeamIdentityMismatch, build_snapshot, latest_published_gameweek
 
 
 BEFORE_DEADLINE = datetime(2026, 8, 16, 12, 0, tzinfo=UTC)
 AFTER_DEADLINE = datetime(2026, 8, 21, 18, 0, tzinfo=UTC)
+TEAM_ID = 5_105_794
 
 
 def bootstrap() -> BootstrapStatic:
@@ -77,7 +80,15 @@ class FakeClient:
         ]
 
     def get_entry(self, team_id: int) -> Entry:
-        return Entry.model_validate({"id": team_id, "started_event": 1})
+        return Entry.model_validate(
+            {
+                "id": team_id,
+                "started_event": 1,
+                "name": "Sarayut FC",
+                "player_first_name": "Sarayut",
+                "player_last_name": "P",
+            }
+        )
 
     def get_entry_history(self, team_id: int) -> EntryHistory:
         return EntryHistory()
@@ -116,6 +127,23 @@ class UnpublishedPicksClient(FakeClient):
         raise FPLNotFound("not public yet")
 
 
+class MismatchedEntryClient(FakeClient):
+    def get_entry(self, team_id: int) -> Entry:
+        return Entry.model_validate({"id": team_id + 1, "started_event": 1})
+
+
+class StaleSourceClient(FakeClient):
+    fetch_records = [
+        {
+            "endpoint": "entry/5105794/",
+            "source": "stale-cache",
+            "fetched_at": (BEFORE_DEADLINE - timedelta(hours=25)).isoformat(),
+            "duration_ms": 0,
+            "warning": "using stale cache",
+        }
+    ]
+
+
 def test_published_gameweek_respects_deadline() -> None:
     data = bootstrap()
     assert latest_published_gameweek(data, BEFORE_DEADLINE) is None
@@ -124,11 +152,19 @@ def test_published_gameweek_respects_deadline() -> None:
 
 def test_snapshot_before_gw1_does_not_request_private_picks() -> None:
     client = FakeClient()
-    snapshot = build_snapshot(client, team_id=3_647_781, now=BEFORE_DEADLINE)
+    snapshot = build_snapshot(client, team_id=TEAM_ID, now=BEFORE_DEADLINE)
 
     assert client.picks_called is False
-    assert snapshot["manager"]["team_id"] == 3_647_781
+    assert snapshot["schema_version"] == 2
+    assert snapshot["manager"]["team_id"] == TEAM_ID
+    assert snapshot["identity"]["verified"] is True
+    assert snapshot["identity"]["team_name"] == "Sarayut FC"
+    assert snapshot["identity"]["manager_name"] == "Sarayut P"
+    assert snapshot["identity"]["season"] == "2026-27"
+    assert snapshot["identity"]["target_gameweek_id"] == 1
+    assert snapshot["data_quality"]["is_stale"] is False
     assert snapshot["team"]["picks"] is None
+    assert snapshot["team"]["source_status"] == "local_required"
     assert snapshot["game"]["next_gameweek"]["id"] == 1
     assert snapshot["catalog"]["players"][0]["price"] == 5.0
     assert "No public picks" in snapshot["diagnostics"]["warnings"][0]
@@ -136,12 +172,20 @@ def test_snapshot_before_gw1_does_not_request_private_picks() -> None:
 
 def test_snapshot_after_deadline_includes_public_picks() -> None:
     client = PublishedPicksClient()
-    snapshot = build_snapshot(client, team_id=3_647_781, now=AFTER_DEADLINE)
+    snapshot = build_snapshot(client, team_id=TEAM_ID, now=AFTER_DEADLINE)
 
     assert client.picks_called is True
     assert snapshot["team"]["published_gameweek"] == 1
     assert snapshot["team"]["picks"][0]["element"] == 1
     assert snapshot["team"]["picks"][0]["is_captain"] is True
+    assert snapshot["team"]["source_status"] == "published"
+    assert snapshot["provenance"]["published_squad"]["kind"] == "fact"
+    assert snapshot["gameweek_decision"]["team_id"] == TEAM_ID
+    assert snapshot["gameweek_decision"]["status"] == "unavailable"
+    advisor = snapshot["analysis"]["recommendations"]["transfer_advisor"]
+    assert advisor["version"] == "transfer-advisor-1.0"
+    assert advisor["status"] == "needs_user_input"
+    assert advisor["wildcard_separate"] is True
     assert not any(
         "not public yet" in warning
         for warning in snapshot["diagnostics"]["warnings"]
@@ -150,8 +194,21 @@ def test_snapshot_after_deadline_includes_public_picks() -> None:
 
 def test_snapshot_survives_publication_delay_after_deadline() -> None:
     client = UnpublishedPicksClient()
-    snapshot = build_snapshot(client, team_id=3_647_781, now=AFTER_DEADLINE)
+    snapshot = build_snapshot(client, team_id=TEAM_ID, now=AFTER_DEADLINE)
 
     assert client.picks_called is True
     assert snapshot["team"]["picks"] is None
     assert "not public yet" in snapshot["diagnostics"]["warnings"][0]
+
+
+def test_snapshot_rejects_a_mismatched_team_identity() -> None:
+    with pytest.raises(TeamIdentityMismatch, match="Recommendations were not generated"):
+        build_snapshot(MismatchedEntryClient(), team_id=TEAM_ID, now=BEFORE_DEADLINE)
+
+
+def test_snapshot_warns_when_a_core_source_is_older_than_24_hours() -> None:
+    snapshot = build_snapshot(StaleSourceClient(), team_id=TEAM_ID, now=BEFORE_DEADLINE)
+
+    assert snapshot["data_quality"]["is_stale"] is True
+    assert snapshot["data_quality"]["age_hours"] == 25.0
+    assert "25.0 hours old" in snapshot["diagnostics"]["warnings"][0]

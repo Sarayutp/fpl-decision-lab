@@ -29,6 +29,12 @@ class Team(FPLModel):
     short_name: str
     code: int | None = None
     strength: int | None = None
+    strength_overall_home: int | None = None
+    strength_overall_away: int | None = None
+    strength_attack_home: int | None = None
+    strength_attack_away: int | None = None
+    strength_defence_home: int | None = None
+    strength_defence_away: int | None = None
 
 
 class ElementType(FPLModel):
@@ -114,6 +120,8 @@ class Entry(FPLModel):
     summary_overall_points: int | None = None
     summary_overall_rank: int | None = None
     name: str | None = None
+    player_first_name: str | None = None
+    player_last_name: str | None = None
 
 
 class EntryHistory(FPLModel):
