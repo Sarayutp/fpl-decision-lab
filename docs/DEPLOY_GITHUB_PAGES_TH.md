@@ -5,17 +5,20 @@ Dashboard: [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.githu
 
 ## สถานะปัจจุบัน
 
-**Phase 6 เผยแพร่แล้วเมื่อ 31 สิงหาคม 2026:** รุ่น `2.0.0-rc.1`, build
-`984449c719ddc84f`, Team ID `5105794`. CI, published smoke และ hosted restore ผ่าน
-ดู [หลักฐานและข้อจำกัดของผลตรวจ](PHASE_6_QA.md)
+**Phase 7A เผยแพร่แล้วเมื่อ 31 สิงหาคม 2026:** รุ่น `2.1.0-rc.1`, build
+`b276298127b2b5de`, Team ID `5105794`, snapshot `2026-08-31T02:55:12.707411+00:00`.
+CI และ published smoke ผ่าน ดู [หลักฐานและข้อจำกัดของผลตรวจ](PHASE_7A_QA.md)
+
+การซ้อม hosted restore ทำไว้ใน [Phase 6](PHASE_6_QA.md); checker รุ่นปัจจุบันยังตรวจ
+artifact Phase 6 เดิมผ่าน โดยไม่ได้ deploy ย้อนรุ่นระหว่างการตรวจ Phase 7A
 
 ### ด่านก่อนและหลังเผยแพร่
 
-1. CI ตรวจ Python/JS, contract, payload budget และ browser E2E 26 cases
+1. CI ตรวจ Python 61/JS 33, contract, payload budget และ browser E2E 38 cases โดยไม่รับ flaky pass
 2. build สร้าง `build-info.json` พร้อม build ID, release, timestamp และ SHA-256 ของไฟล์สำคัญ
 3. workflow เก็บ `validated-site` ไว้ 30 วัน แล้ว upload Pages artifact
 4. หลัง deploy สั่ง `smoke_site.py` ที่ URL จริงพร้อม expected build ID ถ้าไฟล์/ทีม/เวลาไม่ตรงให้ถือว่า release ยังไม่ผ่าน
-5. เปิด Diagnostics ตรวจชื่อทีมและ snapshot รวมทั้งลอง This Gameweek/copy Briefing ใน Browser
+5. เปิด Diagnostics ตรวจชื่อทีมและ snapshot รวมทั้งตรวจหน้าฟีเจอร์ที่เปลี่ยนใน Browser; การลองบันทึก/ลบใช้ QA origin แยก
 
 ### ย้อนรุ่นจาก artifact เดิม
 

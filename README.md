@@ -4,7 +4,7 @@
 ทีม `5105794` (`Sarayut FC`) ใช้ข้อมูลสาธารณะจาก FPL โดยไม่ขอรหัสผ่านหรือ session cookie
 
 ระบบพื้นฐานครบระยะที่ 1–7 เดิมแล้ว การปรับผลิตภัณฑ์ v2 เสร็จ Phase 1, Phase 3,
-Phase 4, Phase 5 และ Phase 6 ส่วน Phase 2 อยู่สถานะ `In review` ระหว่างสะสมผล backtest:
+Phase 4, Phase 5, Phase 6 และ Phase 7A ส่วน Phase 2 อยู่สถานะ `In review` ระหว่างสะสมผล backtest:
 หน้า `This Gameweek` ใช้ทีมจริงของผู้ใช้เพื่อสรุป Transfer, Starting XI,
 Captain/Vice, Bench และ Chip จาก decision contract ชุดเดียวกัน
 โมเดล `xp-v2.0` แยก expected points ออกจาก ranking score พร้อม expected minutes,
@@ -21,8 +21,9 @@ Python 60, JavaScript 20 และ browser E2E 26 cases ผ่านใน CI �
 
 ## เปิดใช้งานทันที
 
-Phase 7A เพิ่มหน้าเปรียบเทียบฉบับร่าง Planner แบบ A/B เฉพาะ GW ปัจจุบัน
-พร้อมตรวจ context และเก็บใน Browser; ส่วนนี้อยู่ระหว่างตรวจ release `2.1.0-rc.1`
+Phase 7A [เปรียบเทียบฉบับร่าง Planner แบบ A/B](https://sarayutp.github.io/fpl-decision-lab/#scenario-comparison)
+เฉพาะ GW ปัจจุบัน พร้อมตรวจ context และเก็บใน Browser เผยแพร่รุ่น `2.1.0-rc.1` แล้ว
+Python 61, JavaScript 33 และ browser 38 cases ผ่าน พร้อม published smoke
 ดู [ผลตรวจและขอบเขต](docs/PHASE_7A_QA.md). Phase 7 ส่วนอื่นยังไม่ได้เริ่ม
 
 **Dashboard ออนไลน์:** [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)

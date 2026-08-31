@@ -398,7 +398,7 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 
 เริ่มหลัง M1–M4 ใช้งานได้จริงและมีข้อมูลเพียงพอว่าผู้ใช้ต้องการ
 
-**สถานะ:** In progress — เริ่ม Phase 7A (Compare scenarios) เมื่อ 31 สิงหาคม 2026; ส่วนอื่นยัง Deferred
+**สถานะ:** In progress — Phase 7A (Compare scenarios) เผยแพร่และตรวจรับแล้ว 31 สิงหาคม 2026; ส่วนอื่นยัง Deferred
 
 **ระยะเวลาโดยประมาณ:** ประเมินหลังเก็บ feedback จาก v2
 
@@ -406,13 +406,15 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 - [ ] Effective ownership และ rank-risk simulation
 - [ ] Fixture swing และ watchlist alerts
 - [ ] รองรับหลายทีม/หลายบัญชีโดยแยกข้อมูลสมบูรณ์
-- [ ] Compare scenarios แบบ side-by-side
+- [x] Compare scenarios แบบ side-by-side เฉพาะ GW ปัจจุบัน (Phase 7A)
 - [ ] แชร์ decision card ที่ไม่เปิดเผยข้อมูลเกินจำเป็น
 - [ ] Notification ก่อน deadline เมื่อข่าวทำให้คำแนะนำเปลี่ยน
 
 ฟีเจอร์ใน Phase นี้ต้องไม่ทำให้คำตอบหลักประจำ Gameweek ซับซ้อนขึ้น
 
 ### Phase 7A — Compare plans A/B
+
+**สถานะ:** Done — รุ่น `2.1.0-rc.1` เผยแพร่พร้อม CI และ published smoke ผ่าน 31 สิงหาคม 2026
 
 เริ่มจากการเทียบแผนใน GW ปัจจุบัน โดยใช้ Planner/โมเดลเดิม ไม่เริ่ม mini-league,
 EO/rank simulation หรือ notification ก่อนมี feedback เพิ่ม ส่วน Phase 2 ยังคง In review
@@ -423,7 +425,7 @@ EO/rank simulation หรือ notification ก่อนมี feedback เพ�
 - [x] ตรวจ XI 11 + bench 4, club quota, ชิปที่ใช้ได้, FT, งบ และความตรงกันของ transfer path
 - [x] แยก storage ตามทีม/ฤดูกาล/GW; freeze ตัวเลขและหยุด delta เมื่อ snapshot/ข่าว/ราคา/โมเดลเปลี่ยน
 - [x] มี export JSON และลบเฉพาะช่องที่ยืนยัน; storage เสีย/เต็มไม่เขียนทับเดิมและไม่อ้างว่าบันทึกสำเร็จ
-- [ ] Browser CI และ published smoke ผ่านก่อนปิดงานส่วนนี้
+- [x] Browser CI และ published smoke ผ่านก่อนปิดงานส่วนนี้ (รวม Python/JS/browser 132 cases)
 
 ขอบเขตแรกยังไม่มีเลือก A/B ไปใช้โดยอัตโนมัติ, import, แชร์ออนไลน์ หรือเทียบผลทั้งช่วงหลาย GW
 ไม่ใช้ delta นี้แทนเกณฑ์แนะนำ -4 ของ Transfer Advisor ผลตรวจ: [PHASE_7A_QA.md](PHASE_7A_QA.md)
