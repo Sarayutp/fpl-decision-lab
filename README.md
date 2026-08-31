@@ -4,7 +4,7 @@
 ทีม `5105794` (`Sarayut FC`) ใช้ข้อมูลสาธารณะจาก FPL โดยไม่ขอรหัสผ่านหรือ session cookie
 
 ระบบพื้นฐานครบระยะที่ 1–7 เดิมแล้ว การปรับผลิตภัณฑ์ v2 เสร็จ Phase 1, Phase 3,
-Phase 4 และ Phase 5 ส่วน Phase 2 อยู่สถานะ `In review` ระหว่างสะสมผล backtest:
+Phase 4, Phase 5 และ Phase 6 ส่วน Phase 2 อยู่สถานะ `In review` ระหว่างสะสมผล backtest:
 หน้า `This Gameweek` ใช้ทีมจริงของผู้ใช้เพื่อสรุป Transfer, Starting XI,
 Captain/Vice, Bench และ Chip จาก decision contract ชุดเดียวกัน
 โมเดล `xp-v2.0` แยก expected points ออกจาก ranking score พร้อม expected minutes,
@@ -14,14 +14,17 @@ confidence, ช่วงคะแนนและ quality flags ส่วน `Tra
 ส่วน `Chip & Multi-GW Planner` เทียบ BB/TC/FH/WC ในช่วง 3–6 GW พร้อมค่าเสียโอกาส,
 สถานะชิปจากประวัติจริง และ transfer path หลัก/สำรอง
 
-Phase 6 รุ่น `2.0.0-rc.1` พร้อมตรวจในเครื่องแล้ว: เมนู responsive, สถานะข้อมูล/ออฟไลน์,
+Phase 6 รุ่น `2.0.0-rc.1` เผยแพร่และตรวจรับแล้ว: เมนู responsive, สถานะข้อมูล/ออฟไลน์,
 local decision log, version compatibility และ release smoke/rollback workflow.
-ยังเป็น `In review` จนกว่า CI และการเผยแพร่จริงจะผ่าน ดู [ผลตรวจ Phase 6](docs/PHASE_6_QA.md)
-เว็บไซต์ออนไลน์อาจยังเป็นรุ่นก่อนหน้า เพราะยังไม่ได้เผยแพร่การเปลี่ยนแปลงชุดนี้
+Python 60, JavaScript 20 และ browser E2E 26 cases ผ่านใน CI พร้อม published smoke
+และ hosted restore rehearsal ดู [ผลตรวจ Phase 6](docs/PHASE_6_QA.md)
 
 ## เปิดใช้งานทันที
 
 **Dashboard ออนไลน์:** [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
+
+ถ้าเห็นหน้าเว็บรุ่นเก่าหรือ `Unsupported schema version 2` ให้ refresh อีกครั้งเพื่อรับ
+รุ่นใหม่ ไม่ต้องล้างข้อมูล Browser หรือทีมที่บันทึกไว้
 
 ไม่ต้องเปิด MacBook และไม่ต้องติดตั้งโปรแกรม GitHub Actions จะดึงข้อมูล FPL,
 คำนวณ xP/optimizer, ทดสอบ และ deploy หน้าใหม่ให้อัตโนมัติประมาณเวลา 01:17,

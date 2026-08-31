@@ -5,13 +5,13 @@ Dashboard: [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.githu
 
 ## สถานะปัจจุบัน
 
-**Phase 6 ยังไม่ได้เผยแพร่:** ข้อความสถานะออนไลน์ด้านล่างอธิบายการติดตั้งเดิม
-ไม่ใช่หลักฐานว่ารุ่น `2.0.0-rc.1` อยู่บนเว็บไซต์แล้ว ต้องตรวจ CI, published smoke และ
-ขออนุมัติ push/deploy ก่อน ขั้นตอนใหม่ที่เตรียมไว้มีดังนี้
+**Phase 6 เผยแพร่แล้วเมื่อ 31 สิงหาคม 2026:** รุ่น `2.0.0-rc.1`, build
+`984449c719ddc84f`, Team ID `5105794`. CI, published smoke และ hosted restore ผ่าน
+ดู [หลักฐานและข้อจำกัดของผลตรวจ](PHASE_6_QA.md)
 
 ### ด่านก่อนและหลังเผยแพร่
 
-1. CI ตรวจ Python/JS, contract, payload budget และ browser E2E 20 cases
+1. CI ตรวจ Python/JS, contract, payload budget และ browser E2E 26 cases
 2. build สร้าง `build-info.json` พร้อม build ID, release, timestamp และ SHA-256 ของไฟล์สำคัญ
 3. workflow เก็บ `validated-site` ไว้ 30 วัน แล้ว upload Pages artifact
 4. หลัง deploy สั่ง `smoke_site.py` ที่ URL จริงพร้อม expected build ID ถ้าไฟล์/ทีม/เวลาไม่ตรงให้ถือว่า release ยังไม่ผ่าน
@@ -31,7 +31,13 @@ Dashboard: [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.githu
 ถ้า artifact หมดอายุ ให้สร้าง release จาก commit ที่รู้ว่าใช้งานได้และตรวจใหม่ทั้งชุด
 ไม่ใช้ reset หรือแก้ history ของ repository เป็นขั้นตอน rollback
 
-ซ้อม artifact restore ในเครื่องแล้ว แต่ **ยังไม่เคยสั่ง workflow rollback ของ Phase 6 บน GitHub จริง**
+ซ้อม artifact A → B → restore A ในเครื่องแล้ว และ [ซ้อม workflow บน GitHub จริงผ่าน](https://github.com/Sarayutp/fpl-decision-lab/actions/runs/33348816315)
+โดยใช้ artifact ของ deployment `33348695204` เผยแพร่ซ้ำเพื่อทดสอบเส้นทางกู้คืนโดยไม่เปลี่ยนโค้ด/เวลา snapshot ที่ผู้ใช้กำลังเห็น
+ไม่จำเป็นต้องหยุด schedule ระหว่างการซ้อมแบบรุ่นเดียวกันครั้งนี้; รอบ refresh เดิมยังเปิดอยู่
+
+ผู้ใช้ที่ cache เว็บรุ่น v7 เดิมไว้ควร refresh อีกครั้งหลังการเปิดครั้งแรกเพื่อรับรุ่นใหม่
+ไม่ต้องล้าง localStorage เพราะจะทำให้แผนที่ผู้ใช้บันทึกไว้หาย
+
 อ้างอิง: [GitHub custom Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
 และ [ดาวน์โหลด artifact ข้าม workflow run](https://github.com/actions/download-artifact#download-artifacts-from-other-workflow-runs-or-repositories)
 

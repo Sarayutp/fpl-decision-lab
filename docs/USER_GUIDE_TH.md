@@ -14,6 +14,10 @@ FPL Decision Lab รวมข้อมูล FPL, โปรแกรมแข่
 Python ระบบทำงานเป็น static PWA บน GitHub Pages ส่วน GitHub Actions ทำ data
 pipeline และ deploy ให้ตามเวลา
 
+หากเคยเปิดเว็บรุ่นเดิมแล้วเห็นหน้าตาเก่าหรือข้อความ `Unsupported schema version 2`
+ให้ refresh หน้าเว็บอีกครั้งเพื่อรับรุ่นใหม่ ไม่ต้องล้างข้อมูล Browser เพราะแผนของคุณ
+เก็บอยู่ใน Browser นั้น
+
 ## เริ่มใช้งานผ่านเว็บ
 
 1. เปิด Dashboard จาก URL ด้านบนด้วย Chrome, Safari หรือ Browser บนมือถือ

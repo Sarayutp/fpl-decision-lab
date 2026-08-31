@@ -38,12 +38,14 @@ npx playwright install --with-deps chromium
 npm run test:e2e
 ```
 
-มี 20 cases สำหรับ desktop/mobile: ยืนยันทีม, refresh, copy clipboard, journal persistence,
-actual result, data states และ keyboard/viewport checks. ได้ตรวจ test discovery แล้ว
-แต่ยังไม่อ้างว่าชุดนี้รันผ่านใน CI จนกว่าจะมีผลจาก workflow ของ release นี้
+มี 26 cases สำหรับ Chromium desktop/mobile: ยืนยันทีม, refresh, copy clipboard, journal
+persistence, actual result, data states, viewport 375/768/1280px, accessible names,
+contrast baseline, skip-link focus และ reduced motion. ผ่าน CI แล้วเมื่อ 31 สิงหาคม 2026
+พร้อม Python 60 และ JavaScript 20 tests; ลิงก์ผลจริงอยู่ใน [PHASE_6_QA.md](PHASE_6_QA.md)
 
 Performance budget ใน `tests/fixtures/frontend-budget.json` เป็น baseline เริ่มต้น
-ไม่ใช่ Core Web Vitals. ยังคงต้องตรวจบนอุปกรณ์จริง/VoiceOver ก่อนปิด release gate
+ไม่ใช่ Core Web Vitals หรือ full accessibility certification. การตรวจบนอุปกรณ์จริง
+Safari/iOS และ VoiceOver ยังเป็นงานติดตามนอก automated baseline ที่ผ่านแล้ว
 
 ## ชุดตรวจมาตรฐาน
 
@@ -130,9 +132,23 @@ python -m http.server 8000 --directory dist
 
 Phase 5 ตรวจเมื่อ 31 สิงหาคม 2026: Python 54 tests, JavaScript 6 tests และ doctor 15/15
 ผ่านครบ Browser จริงตรวจการบันทึกเส้นทาง/เปิดใหม่และข่าวจำลองเปลี่ยนแผนแล้ว
-responsive QA ทุกขนาดและ offline regression เต็มชุดยังอยู่ใน Phase 6
+responsive QA และ offline regression ทำต่อและผ่านใน Phase 6 ตามรายงานด้านบน
 
 ## ปัญหาที่พบบ่อย
+
+### เว็บรุ่นเดิมแสดง `Unsupported schema version 2`
+
+Refresh หน้าเว็บอีกครั้งเพื่อรับ service worker และหน้าเว็บรุ่นใหม่ ไม่ต้องล้างข้อมูล
+Browser; localStorage ของผู้ใช้ควรเก็บไว้เสมอ
+
+### HTTP smoke บน Mac แจ้ง certificate verify failed
+
+หาก Python ในเครื่องไม่มี CA bundle ให้ใช้ bundle จาก certifi ที่ติดตั้งพร้อม dependencies
+โดยไม่ปิดการตรวจ TLS:
+
+```bash
+SSL_CERT_FILE="$(python -m certifi)" python scripts/smoke_site.py https://sarayutp.github.io/fpl-decision-lab/
+```
 
 ### `ModuleNotFoundError`
 

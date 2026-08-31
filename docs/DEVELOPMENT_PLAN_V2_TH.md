@@ -1,6 +1,6 @@
 # FPL Decision Lab v2 — Development Plan
 
-อัปเดตล่าสุด: 30 สิงหาคม 2026
+อัปเดตล่าสุด: 31 สิงหาคม 2026
 
 เอกสารนี้เป็นแผนพัฒนารอบใหม่ต่อจากระบบระยะที่ 1–7 เดิม โดยเปลี่ยนจุดเน้นจาก
 “Dashboard สำหรับดูข้อมูล FPL” เป็น “ผู้ช่วยตัดสินใจก่อน deadline สำหรับทีมของผู้ใช้จริง”
@@ -352,7 +352,7 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 
 **ลำดับความสำคัญ:** P2
 
-**สถานะ:** In review (31 สิงหาคม 2026) — โค้ดและ local QA พร้อม; รอ CI และอนุมัติเผยแพร่จริง
+**สถานะ:** Done — 31 สิงหาคม 2026; CI, เว็บไซต์จริง และ hosted restore rehearsal ผ่านแล้ว
 
 **ระยะเวลาโดยประมาณ:** 3–5 วันพัฒนา
 
@@ -362,24 +362,24 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 
 - [x] จัด navigation ใหม่: This Gameweek, Transfers, Planner, Players และ Diagnostics
 - [x] ทำ responsive QA บนมือถือ แท็บเล็ต และ desktop
-- [ ] ตรวจ keyboard navigation, contrast, screen-reader labels และ reduced motion — source/labels/contrast ผ่าน; keyboard E2E รอ CI และยังไม่ตรวจ VoiceOver จริง
+- [x] ตรวจ keyboard navigation, contrast, screen-reader labels และ reduced motion — automated baseline ผ่าน; ไม่ใช่ full VoiceOver/WCAG audit
 - [x] เพิ่ม loading, empty, stale, partial failure และ offline states
-- [x] เพิ่ม unit, integration และ end-to-end tests สำหรับ flow หลัก (20 E2E cases เตรียมใน CI; ยังไม่อ้างว่ารันผ่านแล้ว)
+- [x] เพิ่ม unit, integration และ end-to-end tests สำหรับ flow หลัก (Python 60, JavaScript 20 และ browser E2E 26 cases ผ่านใน CI)
 - [x] สร้าง fixture สำหรับ regression ของทีมจริงโดยไม่เก็บข้อมูลลับ
 - [x] เพิ่ม schema/version compatibility ระหว่าง pipeline กับหน้าเว็บ
-- [x] เพิ่ม deployment smoke test และวิธี rollback (ซ้อม artifact restore ในเครื่องผ่านแล้ว)
+- [x] เพิ่ม deployment smoke test และวิธี rollback (local artifact restore และ hosted restore rehearsal ผ่านแล้ว)
 - [x] บันทึก model version, data timestamp และ release version บนหน้า Diagnostics
 - [x] อัปเดตคู่มือผู้ใช้, architecture, testing และ model card
 - [x] เพิ่ม decision log แบบ local-first เพื่อเทียบคำแนะนำกับผลจริงโดยไม่ส่งข้อมูลออก
 
 ### Release gates
 
-- [x] Flow `เลือกทีม → refresh → รับคำแนะนำ → copy briefing` ผ่าน Browser จริง; ชุดอัตโนมัติยังรอ CI
+- [x] Flow `เลือกทีม → refresh → รับคำแนะนำ → copy briefing` ผ่าน Browser จริงและชุดอัตโนมัติใน CI
 - [x] ไม่พบ P0/P1 bug ค้างจากขอบเขต local QA นี้ (ไม่ใช่การรับรองว่าไม่มีบั๊กทุกกรณี)
 - [x] stale/mismatch/error states ผ่านการทดสอบ
 - [x] หน้า This Gameweek ใช้งานได้บนหน้าจอมือถือทั่วไป (375px, tablet 768px, desktop 1280px)
-- [ ] performance และ accessibility ไม่มี regression จาก baseline ที่บันทึกไว้ — สร้าง baseline เริ่มต้นแล้ว; รอ CI keyboard gate
-- [ ] GitHub Pages deploy ผ่าน smoke test และมีวิธีย้อนรุ่นที่ทดลองแล้ว — local HTTP/restore ผ่าน; ยังไม่ deploy/rollback บน GitHub จริง
+- [x] performance และ accessibility ผ่าน baseline เริ่มต้นและ CI keyboard gate; ไม่มี historical timing จึงไม่อ้างว่าเร็วกว่า Phase 5
+- [x] GitHub Pages deploy ผ่าน smoke test และมีวิธีย้อนรุ่นที่ทดลองแล้ว — hosted restore ใช้ artifact รุ่นเดียวกันเพื่อไม่เปลี่ยนผู้ใช้กลับไปโค้ดเก่า
 
 ### สิ่งที่ส่งมอบ
 
@@ -387,7 +387,9 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 - Decision log เก็บ forecast, XI/C/VC/bench, แผนชิป/ย้ายตัว, version และผลที่ผู้ใช้กรอก
   แยกตามทีม/ฤดูกาล สูงสุด 100 รายการ พร้อม export และลบเฉพาะรายการ
 - บันทึกแผนใหม่ไม่ได้เมื่อข้อมูลเก่า ออฟไลน์ หรือผ่าน deadline; ยังอ่านข้อมูลอ้างอิงได้
-- ผลตรวจอยู่ใน [PHASE_6_QA.md](PHASE_6_QA.md); ไม่ได้ push, deploy หรือเปลี่ยนเว็บไซต์ออนไลน์
+- [เว็บไซต์ออนไลน์](https://sarayutp.github.io/fpl-decision-lab/) เผยแพร่แล้ว; ผลตรวจและลิงก์ CI/deploy/restore อยู่ใน [PHASE_6_QA.md](PHASE_6_QA.md)
+- ผู้ใช้ cache รุ่นเดิมอาจต้อง refresh หนึ่งครั้ง; ไม่ต้องล้างข้อมูลทีมที่บันทึกใน Browser
+- การตรวจอุปกรณ์จริง Safari/iOS และ VoiceOver ยังเป็นงานติดตาม ไม่รวมในผล automated baseline นี้
 - Phase 2 ยัง `In review` ตามเดิม ไม่ได้ยกระดับความแม่นของโมเดลเพราะ UI/QA ผ่าน
 
 ---
