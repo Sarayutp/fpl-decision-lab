@@ -4,7 +4,7 @@ let started = 0;
 function inspect() {
   const doc = frame.contentDocument;
   if (doc?.querySelector('#guide-content')) {
-    result.textContent=JSON.stringify({page:'guide',width:frame.clientWidth,pageOverflow:doc.documentElement.scrollWidth-frame.clientWidth,chapters:doc.querySelectorAll('#guide-content h2').length,toc:doc.querySelectorAll('.guide-toc a').length,download:doc.querySelector('a[download]')?.getAttribute('href')},null,2);
+    result.textContent=JSON.stringify({page:'guide',width:frame.clientWidth,pageOverflow:doc.documentElement.scrollWidth-frame.clientWidth,tableOverflow:Math.max(0,...[...doc.querySelectorAll('.guide-content table')].map(table=>table.getBoundingClientRect().right-table.parentElement.getBoundingClientRect().right)),chapters:doc.querySelectorAll('#guide-content h2').length,toc:doc.querySelectorAll('.guide-toc a').length,download:doc.querySelector('a[download]')?.getAttribute('href')},null,2);
     return;
   }
   if (!doc?.querySelector('#runtime-state')) return;

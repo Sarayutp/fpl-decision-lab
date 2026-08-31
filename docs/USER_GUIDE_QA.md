@@ -22,7 +22,8 @@
 - เปิดเมนูคู่มือจาก Dashboard ที่ HTTP 503 ได้ โดยไม่โหลดข้อมูลทีมในหน้าคู่มือ
 - Browser E2E 68 cases เตรียมพร้อม โดย 16 cases ใหม่ตรวจ help/error/no-JS/no-data/download/
   native-print invocation/print CSS/375-768-1280px/keyboard/service-worker offline isolation
-- asset budget เดิมไม่เพิ่ม: JS 189,296 / CSS 56,341 / snapshot 2,714,121 bytes
+- asset budget เดิมไม่เพิ่ม: JS 189,296 / CSS 56,355 / snapshot 2,714,121 bytes
+- แก้ inherited table min-width จาก Dashboard ที่ซ่อนคอลัมน์บนมือถือ และเพิ่ม gate ตรวจขอบตารางทุกตัว ไม่ใช้ root overflow อย่างเดียว
 
 ## รอการตรวจรับ
 
