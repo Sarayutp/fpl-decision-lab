@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from fpl_mvp.forecast import availability, project_players
+from fpl_mvp.forecast import availability, project_players, projection_quality_report
 from fpl_mvp.models import BootstrapStatic, Fixture, Player
 
 
@@ -77,3 +77,108 @@ def test_availability_uses_public_chance() -> None:
     )
 
     assert availability(player) == (0.25, "high")
+
+
+def test_v2_separates_expected_points_ranking_and_confidence() -> None:
+    bootstrap = make_bootstrap()
+    fixtures = [
+        Fixture.model_validate(
+            {
+                "id": 1,
+                "event": 1,
+                "team_h": 1,
+                "team_a": 2,
+                "team_h_difficulty": 2,
+                "finished": True,
+            }
+        )
+    ]
+    result = project_players(bootstrap, fixtures, now=NOW, horizon=1)[0]
+
+    assert result["expected_points_next"] == result["xp_next"]
+    assert result["ranking_score_next"] != result["expected_points_next"]
+    assert 0 <= result["start_probability"] <= 1
+    assert 0 <= result["expected_minutes"] <= 90
+    assert result["projection_confidence"] in {"low", "medium", "high"}
+    assert result["expected_points_range"]["lower"] <= result["xp_next"]
+    assert result["expected_points_range"]["upper"] >= result["xp_next"]
+
+
+def test_small_sample_breakout_is_shrunk_and_flagged() -> None:
+    bootstrap = make_bootstrap()
+    breakout = bootstrap.elements[0].model_copy(
+        update={
+            "minutes": 108,
+            "starts": 1,
+            "total_points": 22,
+            "points_per_game": "22.0",
+            "ep_next": "11.0",
+            "expected_goal_involvements_per_90": 1.5,
+        }
+    )
+    bootstrap = bootstrap.model_copy(update={"elements": [breakout]})
+    fixtures = [
+        Fixture.model_validate(
+            {
+                "id": 1,
+                "event": 1,
+                "team_h": 1,
+                "team_a": 2,
+                "team_h_difficulty": 3,
+                "finished": True,
+            }
+        )
+    ]
+
+    result = project_players(bootstrap, fixtures, now=NOW, horizon=1)[0]
+
+    assert result["xp_next"] < 10
+    assert "small_sample" in result["data_quality_flags"]
+    assert result["model_inputs"]["current_season_weight"] < 0.2
+
+
+def test_fpl_ep_next_is_blended_once_for_a_double_gameweek() -> None:
+    fixtures = [
+        Fixture.model_validate(
+            {
+                "id": 1,
+                "event": 1,
+                "team_h": 1,
+                "team_a": 2,
+                "team_h_difficulty": 3,
+            }
+        ),
+        Fixture.model_validate(
+            {
+                "id": 2,
+                "event": 1,
+                "team_h": 3,
+                "team_a": 1,
+                "team_a_difficulty": 3,
+            }
+        ),
+    ]
+    result = project_players(make_bootstrap(), fixtures, now=NOW, horizon=1)[0]
+    row = result["gameweeks"][0]
+
+    expected = 0.75 * row["model_components"]["internal_points"] + 0.25 * 4.0
+    assert row["fixture_count"] == 2
+    assert row["expected_points"] == round(expected, 2)
+    assert row["expected_minutes"] < result["expected_minutes"] * 2
+
+
+def test_projection_quality_guardrails_reject_low_sample_spikes() -> None:
+    report = projection_quality_report(
+        [
+            {
+                "expected_points_next": 13.0,
+                "projection_confidence": "low",
+                "data_quality_flags": ["small_sample"],
+                "gameweeks": [{"fixture_count": 1}],
+            }
+        ]
+    )
+
+    assert report["status"] == "review_required"
+    assert report["guardrails_passed"] is False
+    assert report["low_sample_above_10_count"] == 1

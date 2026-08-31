@@ -27,6 +27,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cache-dir", type=Path, help="JSON cache directory")
     parser.add_argument("--output", type=Path, help="Snapshot output path")
     parser.add_argument("--briefing-output", type=Path, help="AI briefing output path")
+    parser.add_argument(
+        "--risk-evidence",
+        type=Path,
+        help="Curated official news, midweek minutes and expiring overrides",
+    )
     parser.add_argument("--dashboard-dir", type=Path, help="Dashboard source directory")
     parser.add_argument("--site-output", type=Path, help="Built static site directory")
     parser.add_argument(
@@ -45,6 +50,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         cache_dir=args.cache_dir,
         output_path=args.output,
         briefing_path=args.briefing_output,
+        risk_evidence_path=args.risk_evidence,
         dashboard_dir=args.dashboard_dir,
         site_output_dir=args.site_output,
     )

@@ -19,12 +19,12 @@
     <link rel="icon" type="image/png" href="./public/favicon.png">
     <link rel="apple-touch-icon" href="./public/icon-192.png">
     <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="stylesheet" href="./assets/styles.css?v=7">
+    <link rel="stylesheet" href="./assets/styles.css?v=20">
   </head>
   <body>
     <a class="skip-link" href="#main">ข้ามไปยังเนื้อหา</a>
     <header class="topbar">
-      <a class="brand" href="#overview" aria-label="FPL Decision Lab หน้าแรก">
+      <a class="brand" href="#this-gameweek" aria-label="FPL Decision Lab หน้าแรก">
         <span class="brand-mark" aria-hidden="true">F</span>
         <span>
           <strong>FPL Decision Lab</strong>
@@ -32,22 +32,79 @@
         </span>
       </a>
       <nav aria-label="เมนูหลัก">
-        <a href="#overview">ภาพรวม</a>
-        <a href="#recommended">ทีมแนะนำ</a>
-        <a href="#squad-lab">Squad Lab</a>
-        <a href="#players">ผู้เล่น</a>
-        <a href="#ai-briefing">AI Briefing</a>
+        <a href="#this-gameweek">This Gameweek</a>
+        <a href="#transfer-advisor">Transfers</a>
+        <a href="#chip-planner">Planner</a>
+        <a href="#players">Players</a>
+        <a href="#system">Diagnostics</a>
       </nav>
       <span id="freshness-badge" class="freshness-badge">กำลังโหลดข้อมูล</span>
     </header>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
+      <section class="runtime-panel" aria-label="สถานะการโหลด">
+        <p id="runtime-state" role="status" data-kind="loading">กำลังโหลดทีมและคำแนะนำ…</p>
+        <p id="runtime-help">ปุ่มโหลดใหม่อ่าน snapshot ที่เว็บไซต์เผยแพร่ล่าสุด ไม่เปลี่ยนทีมใน FPL</p>
+        <button id="refresh-data" class="button button-ghost" type="button">โหลดข้อมูลเว็บใหม่</button>
+      </section>
+      <div id="dashboard-content" hidden aria-busy="true">
+      <section id="identity" class="identity-panel" aria-labelledby="identity-team-name">
+        <div class="identity-primary">
+          <p class="eyebrow">TEAM SOURCE OF TRUTH</p>
+          <div class="identity-title-row">
+            <div>
+              <h2 id="identity-team-name">กำลังตรวจสอบทีม…</h2>
+              <p id="identity-manager-name">กำลังอ่านชื่อผู้จัดการ</p>
+            </div>
+            <span id="identity-status" class="validity-pill">กำลังยืนยัน</span>
+          </div>
+          <div class="identity-tags" aria-label="รายละเอียดทีม">
+            <span id="identity-team-id">Team ID —</span>
+            <span id="identity-season">ฤดูกาล —</span>
+            <span id="identity-gameweek">Gameweek —</span>
+            <span id="identity-squad-source">แหล่งทีม —</span>
+            <span id="identity-source-time">ต้นทาง —</span>
+          </div>
+        </div>
+        <div class="team-setting">
+          <label for="team-id-input">Team ID ที่คุณตั้งใจดู</label>
+          <div class="team-setting-control">
+            <input id="team-id-input" type="number" inputmode="numeric" min="1" step="1" aria-describedby="team-id-help">
+            <button id="save-team-id" class="button button-ghost" type="button">ตรวจสอบ Team ID</button>
+          </div>
+          <small id="team-id-help">ใช้ตรวจป้องกันข้อมูลผิดทีม การเปลี่ยนทีมบนเว็บต้อง refresh pipeline ด้วย Team ID เดียวกัน</small>
+        </div>
+        <div id="identity-alert" class="source-alert danger" role="alert" hidden></div>
+        <div id="freshness-alert" class="source-alert warning" role="alert" hidden></div>
+      </section>
+
+      <section id="this-gameweek" class="decision-section" aria-labelledby="decision-title">
+        <nav class="section-shortcuts" aria-label="เครื่องมือประจำ Gameweek">
+          <a href="#risk-desk">News & Risk</a><a href="#recommended">XI ของฉัน</a>
+          <a href="#squad-lab">Squad Lab</a><a href="#ai-briefing">AI Briefing</a><a href="#decision-log">ประวัติการตัดสินใจ</a>
+        </nav>
+        <div class="decision-heading">
+          <div>
+            <p class="eyebrow">THIS GAMEWEEK</p>
+            <h1 id="decision-title">กำลังสร้างแผนประจำ Gameweek…</h1>
+            <p id="decision-summary" class="decision-summary">ใช้ทีมจริงของคุณเป็นฐาน</p>
+          </div>
+          <div class="decision-heading-meta">
+            <span id="decision-status" class="validity-pill">กำลังตรวจ</span>
+            <span id="decision-source" class="info-chip">แหล่งทีม —</span>
+            <span id="decision-deadline" class="info-chip">Deadline —</span>
+          </div>
+        </div>
+        <div id="decision-grid" class="decision-grid" aria-live="polite"></div>
+        <div id="decision-alternatives" class="decision-alternatives"></div>
+      </section>
+
       <section class="hero" id="overview">
         <div class="hero-copy">
-          <p class="eyebrow">YOUR GAMEWEEK CONTROL ROOM</p>
-          <h1>ตัดสินใจก่อน deadline<br><span>ด้วยข้อมูล ไม่ใช่อารมณ์</span></h1>
+          <p class="eyebrow">ANALYTICS & EXPLANATION</p>
+          <h2 class="hero-title">ดูเหตุผลเบื้องหลัง<br><span>แผนประจำ Gameweek</span></h2>
           <p class="hero-lead">
-            xP ที่อธิบายได้, optimizer ตามกติกา FPL และข่าวที่ให้ ChatGPT ช่วยตรวจซ้ำ
+            expected points ที่อธิบายได้, optimizer ตามกติกา FPL และข่าวที่ให้ ChatGPT ช่วยตรวจซ้ำ
             — ทำงานได้โดยไม่แตะรหัสผ่านของคุณ
           </p>
           <div class="hero-actions">
@@ -73,12 +130,12 @@
           <small id="overall-points">ยังไม่มีคะแนน</small>
         </article>
         <article class="metric-card accent-card">
-          <span>xP ทีมแนะนำ + กัปตัน</span>
+          <span>xPts XI ทีมจริง + กัปตัน</span>
           <strong id="recommended-xp">—</strong>
           <small id="recommended-formation">กำลังคำนวณ</small>
         </article>
         <article class="metric-card">
-          <span>งบทีมแนะนำ</span>
+          <span>มูลค่าทีมปัจจุบัน</span>
           <strong id="recommended-cost">—</strong>
           <small id="recommended-bank">—</small>
         </article>
@@ -93,10 +150,10 @@
         <article class="panel captain-panel">
           <div class="section-heading compact-heading">
             <div>
-              <p class="eyebrow">CAPTAIN RADAR</p>
-              <h2>ตัวเลือกปลอกแขน</h2>
+              <p class="eyebrow">OWNED CAPTAIN OPTIONS</p>
+              <h2>ตัวเลือกจากทีมของฉัน</h2>
             </div>
-            <span class="info-chip">เรียงตาม xP</span>
+            <span class="info-chip">คะแนน + นาที + ความมั่นใจ</span>
           </div>
           <div id="captain-list" class="captain-list skeleton-lines" aria-live="polite"></div>
         </article>
@@ -122,12 +179,74 @@
         </article>
       </section>
 
+      <section id="risk-desk" class="section-block risk-section" aria-labelledby="risk-desk-title">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">NEWS, MINUTES & RISK • PHASE 4</p>
+            <h2 id="risk-desk-title">ข่าวไหนเปลี่ยนคำแนะนำ?</h2>
+            <p>แยกข้อเท็จจริงออกจากข้อสันนิษฐาน พร้อมเห็นนาทีและ xPts ก่อน–หลังทุกครั้ง</p>
+          </div>
+          <span id="risk-layer-status" class="validity-pill">กำลังตรวจแหล่งข่าว</span>
+        </div>
+
+        <div id="risk-source-grid" class="risk-source-grid" aria-label="สถานะแหล่งข้อมูล"></div>
+
+        <div class="risk-layout">
+          <article class="panel risk-owned-panel">
+            <div class="subheading-row">
+              <div><h3>Risk Check ของทีมจริง</h3><small>เรียงข่าวที่มีผลก่อน ตามด้วยผู้เล่นที่ต้องเฝ้าดู</small></div>
+              <span id="risk-adjusted-count" class="info-chip">0 คนถูกปรับ</span>
+            </div>
+            <div id="risk-owned-list" class="risk-owned-list" aria-live="polite"></div>
+          </article>
+
+          <article class="panel risk-entry-panel">
+            <div class="subheading-row">
+              <div><h3>เพิ่มหลักฐานใน Browser</h3><small>ใช้เมื่อมีข่าวสโมสรหรือ predicted lineup ใหม่กว่า snapshot</small></div>
+            </div>
+            <form id="risk-evidence-form" class="risk-form">
+              <label class="wide"><span>ผู้เล่นในทีมจริง</span><select id="risk-player" required></select></label>
+              <label><span>ประเภทแหล่ง</span><select id="risk-source-tier" required>
+                <option value="official_club">สโมสรทางการ</option>
+                <option value="official_competition">พรีเมียร์ลีก / FPL</option>
+                <option value="predicted_lineup">Predicted lineup</option>
+                <option value="user_override">ข้อมูลที่ผมยืนยันเอง</option>
+              </select></label>
+              <label><span>หมวดความเสี่ยง</span><select id="risk-category" required>
+                <option value="injury">บาดเจ็บ</option><option value="rotation">Rotation</option>
+                <option value="suspension">ติดโทษแบน</option><option value="travel">เดินทาง / พักน้อย</option>
+                <option value="lineup">โอกาสลงตัวจริง</option><option value="availability">พร้อมลง</option>
+              </select></label>
+              <label class="wide"><span>สรุปข่าวหรือเหตุผล</span><input id="risk-summary" type="text" maxlength="240" required placeholder="เช่น โค้ชยืนยันว่าผ่านการทดสอบความฟิตแล้ว"></label>
+              <label class="wide"><span>ลิงก์แหล่งข่าว</span><input id="risk-source-url" type="url" required placeholder="https://..."></label>
+              <label><span>เวลาเผยแพร่</span><input id="risk-published-at" type="datetime-local" required></label>
+              <label><span>หมดอายุหลัง GW</span><input id="risk-expires-gw" type="number" min="1" required></label>
+              <label><span>คาดนาทีใหม่ (ไม่บังคับ)</span><input id="risk-minutes" type="number" min="0" max="90" step="1" placeholder="0–90"></label>
+              <label><span>โอกาสตัวจริง % (ไม่บังคับ)</span><input id="risk-start-probability" type="number" min="0" max="100" step="1" placeholder="0–100"></label>
+              <button class="button button-primary wide" type="submit">บันทึกและคำนวณใหม่</button>
+            </form>
+            <p class="risk-form-note">Predicted lineup และข้อมูลที่ยืนยันเองจะเป็น “ข้อสันนิษฐาน” เสมอ; predicted lineup ปรับได้ไม่เกิน ±15 นาที/±15% และหลักฐานเกิน 24 ชั่วโมงจะไม่เปลี่ยนคำแนะนำ</p>
+          </article>
+        </div>
+
+        <div class="risk-local-header">
+          <strong>หลักฐานที่เก็บใน Browser</strong>
+          <button id="clear-risk-evidence" class="button button-ghost" type="button">ล้างทั้งหมด</button>
+        </div>
+        <div id="risk-local-list" class="risk-local-list"></div>
+        <div class="transfer-method-note risk-links">
+          <strong>ลำดับแหล่ง:</strong><span>ข่าวสโมสรทางการ → FPL/พรีเมียร์ลีก → override ของคุณ → predicted lineup</span>
+          <a href="https://www.premierleague.com/en/latest-player-injuries/" target="_blank" rel="noreferrer">เช็กอาการบาดเจ็บทางการ</a>
+          <a href="https://fantasy.premierleague.com/api/bootstrap-static/" target="_blank" rel="noreferrer">ดูข้อมูล FPL ต้นทาง</a>
+        </div>
+      </section>
+
       <section id="recommended" class="section-block">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">OPTIMIZER XI</p>
-            <h2>ทีมเริ่มต้นที่ระบบเสนอ</h2>
-            <p>เป็น baseline จากข้อมูลล้วน คุณยังควรตรวจข่าวก่อน deadline</p>
+            <p class="eyebrow">MY TEAM XI</p>
+            <h2>11 ตัวจริงจากทีมปัจจุบัน</h2>
+            <p>เลือกจากผู้เล่นที่คุณมีจริง คุณยังควรตรวจข่าวก่อน deadline</p>
           </div>
           <div id="squad-validity" class="validity-pill">กำลังตรวจสอบ</div>
         </div>
@@ -143,15 +262,116 @@
         </div>
       </section>
 
+      <section id="transfer-advisor" class="section-block transfer-section" aria-labelledby="transfer-advisor-title">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">TRANSFER ADVISOR • BUDGET REALITY</p>
+            <h2 id="transfer-advisor-title">เปรียบเทียบ Roll, 1 FT, 2 FT และ -4</h2>
+            <p>ใช้ทีมจริงของคุณ พร้อมหัก hit และตรวจงบจากราคาขายที่คุณยืนยัน</p>
+          </div>
+          <span id="transfer-advisor-status" class="validity-pill">รอข้อมูลผู้ใช้</span>
+        </div>
+
+        <div class="transfer-inputs">
+          <label>
+            <span>Free Transfer ปัจจุบัน</span>
+            <select id="transfer-free-transfers">
+              <option value="">เลือก 1–5</option>
+              <option value="1">1 FT</option>
+              <option value="2">2 FT</option>
+              <option value="3">3 FT</option>
+              <option value="4">4 FT</option>
+              <option value="5">5 FT</option>
+            </select>
+          </label>
+          <label>
+            <span>เงินในธนาคารปัจจุบัน</span>
+            <div class="money-input"><input id="transfer-bank" type="number" min="0" max="30" step="0.1" inputmode="decimal"><em>m</em></div>
+          </label>
+          <div class="transfer-input-note">
+            <strong>ทำไมต้องกรอก?</strong>
+            <span>FPL สาธารณะไม่แสดง FT และราคาขายจริงของทีมครบถ้วน ข้อมูลนี้เก็บเฉพาะใน Browser</span>
+          </div>
+          <button id="clear-transfer-settings" class="button button-ghost" type="button">ล้างข้อมูล Transfer</button>
+        </div>
+
+        <details class="selling-price-panel">
+          <summary>กรอกราคาขายจริงของผู้เล่น 15 คน <span id="selling-price-progress">0/15</span></summary>
+          <p>ดูราคาขายจากหน้า Transfers ของ FPL ระบบจะใช้ราคาปัจจุบันเพียงทำ shortlist และจะไม่รับรองงบจนกว่าผู้เล่นขาออกใน scenario จะมีราคาขายจริง</p>
+          <div id="selling-price-grid" class="selling-price-grid"></div>
+        </details>
+
+        <div id="transfer-scenario-grid" class="transfer-scenario-grid" aria-live="polite"></div>
+        <div class="transfer-method-note">
+          <strong>เกณฑ์ -4:</strong>
+          <span>ต้องบวกหลังหัก 4 แต้มในช่วงถือครอง, downside case ยังเป็นบวก และผู้เล่นขาเข้าผ่านเกณฑ์นาที/โอกาสตัวจริง</span>
+          <a href="https://www.premierleague.com/en/news/2174907" target="_blank" rel="noreferrer">กติกา FPL ทางการ</a>
+        </div>
+      </section>
+
+      <section id="chip-planner" class="section-block planner-section" aria-labelledby="chip-planner-title">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">CHIP & MULTI-GW PLANNER • PHASE 5</p>
+            <h2 id="chip-planner-title">ใช้ตอนนี้ หรือเก็บไว้?</h2>
+            <p>เทียบผลตอบแทนกับ Gameweek ที่ดีที่สุดในช่วงโมเดล พร้อมดูแผนย้ายตัวหลักและแผนสำรอง</p>
+          </div>
+          <div class="planner-heading-meta">
+            <span id="planner-horizon" class="info-chip">กำลังอ่านช่วงโมเดล</span>
+            <span id="planner-status" class="validity-pill">กำลังตรวจชิป</span>
+          </div>
+        </div>
+
+        <div id="planner-saved-status" class="planner-saved-status" aria-live="polite"></div>
+        <p id="planner-visibility-warning" class="planner-note"></p>
+        <div id="planner-weekly" class="planner-weekly" aria-label="แผนราย Gameweek"></div>
+
+        <div class="planner-subheading">
+          <div><h3>เปรียบเทียบชิป</h3><small>ประวัติที่ FPL ยืนยันจะล็อกไว้ ส่วนสถานะรอใช้เก็บเฉพาะ Browser</small></div>
+        </div>
+        <div id="planner-chip-grid" class="planner-chip-grid" aria-live="polite"></div>
+
+        <div class="planner-subheading">
+          <div><h3>Transfer path</h3><small>ตรวจงบและโควตาหลังทุก move ด้วยราคาปัจจุบัน — ยืนยันราคาขายจริงใน Transfer Advisor อีกครั้ง</small></div>
+        </div>
+        <div id="planner-path-grid" class="planner-path-grid"></div>
+
+        <div class="planner-actions">
+          <button class="button button-ghost" type="button" data-planner-path="roll">เลือก Roll / ไม่ย้ายตัว</button>
+          <button id="save-planner" class="button button-primary" type="button">บันทึกแผนที่เลือก</button>
+          <button id="clear-planner" class="button button-ghost" type="button">ล้างแผนใน Browser</button>
+          <span>ระบบนี้เป็น read-only และจะไม่กดใช้ชิปหรือย้ายตัวใน FPL</span>
+        </div>
+        <div class="transfer-method-note planner-rule-links">
+          <strong>กติกา 2026/27:</strong><span>ชิป 2 ชุด • 1 ชิปต่อ GW • ชุดแรกไม่ยกยอดหลัง GW19</span>
+          <a href="https://www.premierleague.com/en/news/4679879/whats-happening-with-fpl-chips-in-202627" target="_blank" rel="noreferrer">กติกาชิปทางการ</a>
+          <a href="https://www.premierleague.com/en/news/4661030" target="_blank" rel="noreferrer">FAQ ทางการ</a>
+        </div>
+      </section>
+
+      <section id="decision-log" class="section-block" aria-labelledby="decision-log-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">LOCAL DECISION JOURNAL</p><h2 id="decision-log-title">บันทึกก่อน deadline ทบทวนหลังจบ GW</h2>
+          <p>ใช้แผนที่บันทึกใน Planner; ถ้ายังไม่บันทึก ใช้ XI ทีมเดิม ไม่ย้ายตัวและไม่ใช้ชิป ประวัติแยกตามทีมและฤดูกาล</p></div>
+        </div>
+        <p id="decision-log-status" role="status"></p>
+        <label class="decision-note-label" for="decision-note">เหตุผลที่เลือกแผนนี้ (ไม่บังคับ)</label>
+        <textarea id="decision-note" rows="2" maxlength="500" placeholder="เช่น เก็บ FT รอข่าวความฟิตก่อน GW ถัดไป"></textarea>
+        <div class="button-row log-actions"><button id="record-decision" class="button button-primary" type="button">บันทึกการตัดสินใจ</button>
+        <button id="export-decision-log" class="button button-ghost" type="button">ส่งออกประวัติ JSON</button></div>
+        <p class="planner-note">เก็บได้สูงสุด 100 รายการ ไม่ลบอัตโนมัติ • ล้างข้อมูล Browser จะทำให้ประวัติหาย ควรส่งออกสำรองเป็นระยะ</p>
+        <div id="decision-log-list" class="decision-log-list"></div>
+      </section>
+
       <section id="squad-lab" class="section-block lab-section">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">LOCAL SQUAD LAB</p>
-            <h2>ทดลองทีม 15 คนของคุณ</h2>
-            <p>บันทึกเฉพาะใน Browser เครื่องนี้ ไม่มีข้อมูลล็อกอินส่งออกไป</p>
+            <p class="eyebrow">WILDCARD LAB • แยกจาก TRANSFER ADVISOR</p>
+            <h2>ทดลองสร้างทีมใหม่ 15 คน</h2>
+            <p>พื้นที่นี้ใช้จำลอง Wildcard/ทีมทั้งชุด ไม่ถูกนำไปแสดงเป็น transfer ปกติ</p>
           </div>
           <div class="button-row">
-            <button id="use-recommended" class="button button-primary" type="button">ใช้ทีมแนะนำ</button>
+            <button id="use-recommended" class="button button-primary" type="button">เริ่มจากทีมจริง</button>
             <button id="use-published" class="button button-ghost" type="button" hidden>ใช้ทีม FPL ล่าสุด</button>
             <button id="export-squad" class="button button-ghost" type="button">ส่งออก JSON</button>
             <button id="clear-squad" class="button button-danger" type="button">ล้างทีม</button>
@@ -162,7 +382,7 @@
           <div class="lab-score"><span>ผู้เล่น</span><strong id="lab-player-count">0/15</strong></div>
           <div class="lab-score"><span>งบที่ใช้</span><strong id="lab-cost">0.0</strong></div>
           <div class="lab-score"><span>เงินเหลือ</span><strong id="lab-bank">100.0</strong></div>
-          <div class="lab-score"><span>xP XI + C</span><strong id="lab-xp">—</strong></div>
+          <div class="lab-score"><span>xPts XI + C</span><strong id="lab-xp">—</strong></div>
           <div id="lab-validity" class="lab-validity">เริ่มเลือกผู้เล่นด้านล่าง</div>
         </div>
 
@@ -173,7 +393,7 @@
               <span id="lab-formation" class="info-chip">ยังไม่ครบ 15 คน</span>
             </div>
             <div id="lab-squad-list" class="lab-squad-list empty-state">
-              เลือก “ใช้ทีมแนะนำ” หรือเพิ่มผู้เล่นจากตาราง
+              เลือก “ใช้ทีมจริงในแผน” หรือเพิ่มผู้เล่นจากตาราง
             </div>
           </article>
           <article class="panel">
@@ -216,18 +436,21 @@
           <label>
             <span class="sr-only">เรียงตาม</span>
             <select id="sort-filter">
-              <option value="xp_next">xP Gameweek ถัดไป</option>
-              <option value="xp_horizon">xP 5 Gameweeks</option>
+              <option value="expected_points_next">Expected points ถัดไป</option>
+              <option value="ranking_score_next">Ranking score ถัดไป</option>
+              <option value="expected_points_horizon">Expected points 5 GW</option>
               <option value="value_score">ความคุ้มค่า</option>
               <option value="selected">Ownership</option>
               <option value="price_asc">ราคาต่ำสุด</option>
             </select>
           </label>
         </div>
-        <div class="table-wrap">
+        <p class="table-help" id="table-help">เลื่อนตารางแนวนอนเพื่อดูนาทีและความมั่นใจครบทุกคอลัมน์</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="ตารางผู้เล่น" aria-describedby="table-help">
           <table>
+            <caption class="sr-only">ผู้เล่น FPL ราคา คู่แข่ง คะแนนคาดการณ์และความมั่นใจ</caption>
             <thead>
-              <tr><th>ผู้เล่น</th><th>Pos</th><th>ราคา</th><th>คู่แข่ง</th><th>xP ถัดไป</th><th>xP 5 GW</th><th>Own%</th><th>Risk</th><th><span class="sr-only">เพิ่มผู้เล่น</span></th></tr>
+              <tr><th>ผู้เล่น</th><th>Pos</th><th>ราคา</th><th>คู่แข่ง</th><th>xPts ถัดไป</th><th>xPts 5 GW</th><th>Own%</th><th>นาที / Confidence</th><th><span class="sr-only">เพิ่มผู้เล่น</span></th></tr>
             </thead>
             <tbody id="player-table-body"></tbody>
           </table>
@@ -244,13 +467,13 @@
             เพื่อเช็กข่าวบาดเจ็บ, press conference และ predicted lineup ล่าสุด
           </p>
           <ol class="step-list">
-            <li><span>1</span><div><strong>คัดลอก Briefing</strong><small>ข้อมูลทีม, xP, deadline และข้อจำกัด</small></div></li>
+            <li><span>1</span><div><strong>คัดลอก Briefing</strong><small>ข้อมูลทีม, xPts, expected minutes, deadline และข้อจำกัด</small></div></li>
             <li><span>2</span><div><strong>วางใน ChatGPT</strong><small>ขอให้ค้นเว็บและอ้างแหล่งข่าวล่าสุด</small></div></li>
             <li><span>3</span><div><strong>ตัดสินใจเองก่อนล็อกทีม</strong><small>AI เป็นผู้ช่วย ไม่ใช่ผู้กด transfer แทน</small></div></li>
           </ol>
           <div class="button-row">
             <button id="copy-briefing" class="button button-primary" type="button">คัดลอกสำหรับ ChatGPT</button>
-            <a class="button button-ghost" href="./data/briefing.md" download>ดาวน์โหลด .md</a>
+            <a id="download-briefing" class="button button-ghost" href="./data/briefing.md" download>ดาวน์โหลด .md</a>
           </div>
         </div>
         <article class="briefing-preview">
@@ -263,7 +486,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">SYSTEM HEALTH</p>
-            <h2>ระบบทำงานอย่างไร</h2>
+            <h2>Diagnostics — สถานะระบบ</h2>
           </div>
           <span id="system-status" class="validity-pill">กำลังตรวจ</span>
         </div>
@@ -272,12 +495,13 @@
           <i aria-hidden="true">→</i>
           <div><span>02</span><strong>Validate + Cache</strong><small>retry / stale fallback</small></div>
           <i aria-hidden="true">→</i>
-          <div><span>03</span><strong>xP + Optimizer</strong><small>โปร่งใส ตรวจข้อจำกัด</small></div>
+          <div><span>03</span><strong>xP v2 + Optimizer</strong><small>คะแนน นาที confidence และข้อจำกัด</small></div>
           <i aria-hidden="true">→</i>
           <div><span>04</span><strong>Static Dashboard</strong><small>ฟรีและ offline ได้</small></div>
         </div>
         <div id="diagnostics" class="diagnostics"></div>
       </section>
+      </div>
     </main>
 
     <footer>
@@ -287,6 +511,8 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <noscript>Dashboard นี้ต้องเปิด JavaScript เพื่ออ่านข้อมูลและใช้งาน Squad Lab</noscript>
-    <script src="./assets/app.js?v=7" defer></script>
+    <script src="./assets/runtime.js?v=20" defer></script>
+    <script src="./assets/decision-log.js?v=20" defer></script>
+    <script src="./assets/app.js?v=20" defer></script>
   </body>
 </html>

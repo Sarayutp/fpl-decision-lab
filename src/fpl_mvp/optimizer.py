@@ -76,6 +76,18 @@ def _projection_map(projections: Iterable[dict[str, Any]]) -> dict[int, dict[str
     return {int(item["player_id"]): item for item in projections}
 
 
+def _ranking_next(projection: dict[str, Any]) -> float:
+    return float(projection.get("ranking_score_next", projection["xp_next"]))
+
+
+def _ranking_horizon(projection: dict[str, Any]) -> float:
+    return float(projection.get("ranking_score_horizon", projection["xp_horizon"]))
+
+
+def _captain_score(projection: dict[str, Any]) -> float:
+    return float(projection.get("captain_score", _ranking_next(projection)))
+
+
 def _player_payload(
     player: Player,
     projection: dict[str, Any],
@@ -98,7 +110,31 @@ def _player_payload(
         "bench_order": bench_order,
         "xp_next": projection["xp_next"],
         "xp_horizon": projection["xp_horizon"],
+        "expected_points_next": projection.get(
+            "expected_points_next", projection["xp_next"]
+        ),
+        "expected_points_horizon": projection.get(
+            "expected_points_horizon", projection["xp_horizon"]
+        ),
+        "ranking_score_next": projection.get(
+            "ranking_score_next", projection["xp_next"]
+        ),
+        "ranking_score_horizon": projection.get(
+            "ranking_score_horizon", projection["xp_horizon"]
+        ),
+        "captain_score": projection.get("captain_score", projection["xp_next"]),
+        "expected_minutes": projection.get("expected_minutes"),
+        "expected_minutes_range": projection.get("expected_minutes_range"),
+        "start_probability": projection.get("start_probability"),
+        "projection_confidence": projection.get("projection_confidence"),
+        "confidence_score": projection.get("confidence_score"),
+        "expected_points_range": projection.get("expected_points_range"),
+        "clean_sheet_probability_next": projection.get(
+            "clean_sheet_probability_next"
+        ),
+        "data_quality_flags": projection.get("data_quality_flags", []),
         "risk": projection["risk"],
+        "risk_context": projection.get("risk_context"),
     }
 
 
@@ -108,9 +144,12 @@ def optimize_initial_squad(
     *,
     budget_tenths: int = 1_000,
     time_limit_seconds: float = 15.0,
+    objective_mode: str = "balanced",
 ) -> dict[str, Any]:
     """Optimize a legal 15-player squad, XI, captain and vice-captain."""
 
+    if objective_mode not in {"balanced", "single_gameweek"}:
+        raise ValueError("Unknown squad objective mode")
     projection_by_id = _projection_map(projections)
     candidates = [player for player in players if player.id in projection_by_id]
     count = len(candidates)
@@ -127,12 +166,21 @@ def optimize_initial_squad(
     upper_bounds = np.ones(variable_count)
     for index, player in enumerate(candidates):
         projection = projection_by_id[player.id]
-        xp_next = float(projection["xp_next"])
-        xp_horizon = float(projection["xp_horizon"])
-        objective[squad_offset + index] = -0.28 * xp_horizon
-        objective[lineup_offset + index] = -0.72 * xp_next
-        objective[captain_offset + index] = -(0.70 * xp_next + 0.10 * xp_horizon)
-        objective[vice_offset + index] = -0.03 * xp_next
+        ranking_next = _ranking_next(projection)
+        ranking_horizon = _ranking_horizon(projection)
+        captain_score = _captain_score(projection)
+        objective[squad_offset + index] = -0.28 * ranking_horizon
+        objective[lineup_offset + index] = -0.72 * ranking_next
+        objective[captain_offset + index] = -(
+            0.85 * captain_score + 0.05 * ranking_horizon
+        )
+        objective[vice_offset + index] = -0.03 * captain_score
+        if objective_mode == "single_gameweek":
+            expected = float(projection["xp_next"])
+            objective[squad_offset + index] = -0.0001 * expected
+            objective[lineup_offset + index] = -expected
+            objective[captain_offset + index] = -expected
+            objective[vice_offset + index] = -0.0001 * captain_score
         if (
             not player.can_select
             or player.status in {"u", "n"}
@@ -142,6 +190,10 @@ def optimize_initial_squad(
             upper_bounds[lineup_offset + index] = 0
             upper_bounds[captain_offset + index] = 0
             upper_bounds[vice_offset + index] = 0
+        elif not projection.get("captain_eligible", True):
+            upper_bounds[captain_offset + index] = 0
+            if float(projection.get("expected_minutes", 90)) < 50:
+                upper_bounds[vice_offset + index] = 0
 
     constraint_rows: list[list[tuple[int, float]]] = []
     lower_bounds: list[float] = []
@@ -272,7 +324,7 @@ def optimize_initial_squad(
         (i for i in selected_indexes if i not in starter_indexes),
         key=lambda i: (
             candidates[i].element_type == 1,
-            -float(projection_by_id[candidates[i].id]["xp_next"]),
+            -_ranking_next(projection_by_id[candidates[i].id]),
         ),
     )
     bench_order_by_index = {index: order + 1 for order, index in enumerate(bench_indexes)}
@@ -302,6 +354,7 @@ def optimize_initial_squad(
 
     return {
         "optimizer_version": OPTIMIZER_VERSION,
+        "objective_mode": objective_mode,
         "solver": "SciPy HiGHS MILP",
         "status": "optimal" if result.status == 0 else "feasible",
         "budget": budget_tenths / 10,
@@ -318,6 +371,12 @@ def optimize_initial_squad(
             2,
         ),
         "xp_squad_horizon": round(sum(item["xp_horizon"] for item in picks), 2),
+        "ranking_score_starting_xi": round(
+            sum(float(item["ranking_score_next"]) for item in starters), 2
+        ),
+        "ranking_score_squad_horizon": round(
+            sum(float(item["ranking_score_horizon"]) for item in picks), 2
+        ),
         "captain_id": candidates[captain_index].id,
         "vice_captain_id": candidates[vice_index].id,
         "picks": picks,
@@ -353,14 +412,14 @@ def select_best_lineup(
         for position_id, required in requirements.items():
             pool = sorted(
                 (player for player in selected if player.element_type == position_id),
-                key=lambda player: float(projection_by_id[player.id]["xp_next"]),
+                key=lambda player: _ranking_next(projection_by_id[player.id]),
                 reverse=True,
             )
             if len(pool) < required:
                 feasible = False
                 break
             starters.extend(pool[:required])
-        score = sum(float(projection_by_id[player.id]["xp_next"]) for player in starters)
+        score = sum(_ranking_next(projection_by_id[player.id]) for player in starters)
         if feasible and score > best_score:
             best_score = score
             best_starters = starters
@@ -368,9 +427,16 @@ def select_best_lineup(
     if best_starters is None:
         return {"valid": False, "violations": ["No legal starting formation."], "picks": []}
 
+    captain_pool = [
+        player
+        for player in best_starters
+        if projection_by_id[player.id].get("captain_eligible", True)
+    ]
+    if len(captain_pool) < 2:
+        captain_pool = best_starters
     captain_order = sorted(
-        best_starters,
-        key=lambda player: float(projection_by_id[player.id]["xp_next"]),
+        captain_pool,
+        key=lambda player: _captain_score(projection_by_id[player.id]),
         reverse=True,
     )
     captain_id = captain_order[0].id
@@ -380,7 +446,7 @@ def select_best_lineup(
         (player for player in selected if player.id not in starter_ids),
         key=lambda player: (
             player.element_type == 1,
-            -float(projection_by_id[player.id]["xp_next"]),
+            -_ranking_next(projection_by_id[player.id]),
         ),
     )
     bench_order = {player.id: index + 1 for index, player in enumerate(bench)}
@@ -404,7 +470,12 @@ def select_best_lineup(
         ),
         "captain_id": captain_id,
         "vice_captain_id": vice_id,
-        "xp_with_captain": round(best_score + float(projection_by_id[captain_id]["xp_next"]), 2),
+        "ranking_score_starting_xi": round(best_score, 2),
+        "xp_with_captain": round(
+            sum(float(item["xp_next"]) for item in starters_payload)
+            + float(projection_by_id[captain_id]["xp_next"]),
+            2,
+        ),
         "picks": picks,
     }
 

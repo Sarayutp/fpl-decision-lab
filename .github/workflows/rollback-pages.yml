@@ -1,0 +1,63 @@
+name: Restore a validated Pages release
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Successful deployment run ID containing validated-site (within 30 days)
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify successful deployment origin
+        env:
+          RESTORE_RUN_ID: ${{ inputs.run_id }}
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/verify_restore.py
+      - uses: actions/download-artifact@v8
+        with:
+          name: validated-site
+          path: restored-site
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+      - name: Validate old artifact without changing its data
+        run: python scripts/smoke_site.py restored-site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: restored-site
+  deploy:
+    needs: restore
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: validated-site
+          path: release-check
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/deploy-pages@v4
+        id: deployment
+      - name: Verify restored release
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          BUILD_ID=$(python -c 'import json; print(json.load(open("release-check/build-info.json"))["build_id"])')
+          python scripts/smoke_site.py "$PAGE_URL" --expected-build "$BUILD_ID"
