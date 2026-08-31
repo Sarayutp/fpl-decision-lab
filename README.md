@@ -21,6 +21,11 @@ Python 60, JavaScript 20 และ browser E2E 26 cases ผ่านใน CI �
 
 ## เปิดใช้งานทันที
 
+เมนูใหม่ **วิธีใช้งาน**: [คู่มือภาษาไทย 22 หัวข้อ](https://sarayutp.github.io/fpl-decision-lab/guide.html)
+มีสารบัญ ขั้นตอนทีละปุ่ม ตัวอย่างสมมติ คำศัพท์ ข้อจำกัด และการแก้ปัญหา พร้อมดาวน์โหลด Markdown
+และพิมพ์/บันทึก PDF ผ่าน Browser; คู่มือเป็นหน้าแยก อ่านได้แม้ข้อมูลทีมโหลดไม่สำเร็จ
+รุ่น `2.3.0-rc.1` อยู่ระหว่างตรวจรับ ดู [ผลตรวจคู่มือ](docs/USER_GUIDE_QA.md)
+
 Phase 7A [เปรียบเทียบฉบับร่าง Planner แบบ A/B](https://sarayutp.github.io/fpl-decision-lab/#scenario-comparison)
 เฉพาะ GW ปัจจุบัน พร้อมตรวจ context และเก็บใน Browser เผยแพร่รุ่น `2.1.0-rc.1` แล้ว
 Python 61, JavaScript 33 และ browser 38 cases ผ่าน พร้อม published smoke

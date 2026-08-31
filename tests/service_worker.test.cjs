@@ -26,3 +26,22 @@ test('network-first assets replace older cached scripts',async()=>{
   const s=setup(async()=>new Response('new'));s.entries.set('http://localhost:8011/assets/app.js',new Response('old'));
   assert.equal(await(await s.request('assets/app.js')).text(),'new');
 });
+test('guide navigation with a query uses its own offline page, not the dashboard',async()=>{
+  const s=setup(async()=>{throw Error('offline')});
+  s.entries.set('./index.html',new Response('<h1>Dashboard</h1>'));
+  s.entries.set('./guide.html',new Response('<h1>Guide</h1>'));
+  assert.equal(await(await s.request('guide.html?print=1','navigate')).text(),'<h1>Guide</h1>');
+});
+test('online guide navigation does not poison the cached dashboard',async()=>{
+  const s=setup(async()=>new Response('<h1>Guide</h1>'));
+  s.entries.set('./index.html',new Response('<h1>Dashboard</h1>'));
+  await s.request('guide.html','navigate');
+  assert.equal(await s.entries.get('./index.html').text(),'<h1>Dashboard</h1>');
+  assert.equal(await s.entries.get('./guide.html').text(),'<h1>Guide</h1>');
+});
+test('opening a Markdown document cannot overwrite the cached dashboard',async()=>{
+  const s=setup(async()=>new Response('# User guide'));
+  s.entries.set('./index.html',new Response('<h1>Dashboard</h1>'));
+  await s.request('guide.md','navigate');
+  assert.equal(await s.entries.get('./index.html').text(),'<h1>Dashboard</h1>');
+});

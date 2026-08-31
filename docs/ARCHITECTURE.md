@@ -2,6 +2,15 @@
 
 ## ภาพรวม
 
+หน้า `guide.html` สร้างตอน build จากต้นฉบับเดียว `dashboard/guide.md` ด้วย
+`src/fpl_mvp/guide.py` / `markdown-it-py` (ปิด raw HTML และ images, เปิดตาราง)
+สร้างสารบัญตาม H2 ที่เรียงเลขและตรวจว่ามีชื่อเรื่องเดียว; ลิงก์กลับ Dashboard เป็น relative
+เพื่อใช้ทั้ง local root และ GitHub Pages subpath. ไม่มี client fetch, account data หรือ storage ในคู่มือ
+ยกเว้น JS ปุ่ม native print; อ่านได้เมื่อปิด JavaScript ส่วน Markdown ถูกคัดลอกให้ดาวน์โหลดตรงต้นฉบับ
+build manifest รวม guide HTML/MD/CSS/JS ทั้งหมด และ hash URL บน HTML ทั้งสองหน้า
+Service worker แยก navigation cache ของ guide จาก index เพื่อไม่ให้หน้าใดทับอีกหน้าเวลา offline
+smoke check ตรวจไฟล์คู่มือเมื่อ index อ้างถึง แต่ยังยอมรับ artifact รุ่นก่อนที่ไม่มีเมนูนี้
+
 Phase 7B เพิ่ม `assets/decision-card.js` ต่อจาก A/B ด้วย explicit allowlist สำหรับภาพ PNG
 และข้อความ: slot, GW, ชิป, moves ปัจจุบัน, XI/C/VC/bench, คะแนนสุทธิและข้อจำกัด, snapshot/model/release.
 ชื่อผู้เล่นอ่านจาก public catalog ไม่ใช้ label, risk notes หรือชื่อที่อยู่ใน record ที่บันทึก

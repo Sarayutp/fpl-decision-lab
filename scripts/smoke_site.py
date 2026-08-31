@@ -61,6 +61,18 @@ def check_site(target: str, expected_build: str | None = None) -> dict:
     linked_assets = set(re.findall(r'(?:src|href)="\./(assets/[^"?]+)(?:\?[^\"]*)?"', index))
     if not linked_assets.issubset(hashes):
         raise ValueError("Referenced assets missing from release manifest")
+    if 'href="./guide.html"' in index:
+        guide_files = {"guide.html", "guide.md", "assets/guide.css", "assets/guide.js"}
+        if not guide_files.issubset(hashes):
+            raise ValueError("Guide files missing from release manifest")
+        guide = payloads["guide.html"].decode()
+        if "{{guide_" in guide or "{{release}}" in guide or 'id="guide-01"' not in guide:
+            raise ValueError("Guide page was not rendered")
+        guide_assets = set(re.findall(r'(?:src|href)="\./(assets/[^"?]+)(?:\?[^\"]*)?"', guide))
+        if not guide_assets.issubset(hashes):
+            raise ValueError("Guide assets missing from release manifest")
+        if 'href="./guide.md"' not in guide or not payloads["guide.md"].startswith(b"# "):
+            raise ValueError("Guide download missing")
     for anchor in ["this-gameweek", "transfer-advisor", "chip-planner", "decision-log", "players", "system", "runtime-state"]:
         if f'id="{anchor}"' not in index:
             raise ValueError(f"Missing page section: {anchor}")
