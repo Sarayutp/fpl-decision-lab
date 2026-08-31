@@ -1,6 +1,6 @@
 # Phase 7B — Decision card สำหรับแชร์
 
-วันที่: 31 สิงหาคม 2026 · release `2.2.0-rc.1` · สถานะ **In review**
+วันที่: 31 สิงหาคม 2026 · release `2.2.0-rc.1` · สถานะ **Done — เผยแพร่และตรวจรับแล้ว**
 
 ## ขอบเขต
 
@@ -20,14 +20,26 @@
 - Canvas ล้มเหลวส่งออก TXT ได้; clipboard ถูกปฏิเสธไม่อ้างว่าคัดลอกสำเร็จ
 - A/B JSON สำรองยังมีข้อมูลส่วนตัว จึงมีคำเตือนแยกจากการ์ดสำหรับแชร์
 
-## ผลตรวจในเครื่อง
+## ผลตรวจ
 
 - Python 62 tests และ JavaScript 44 tests ผ่าน (card/privacy ใหม่ 11 cases)
-- Browser suite เตรียม 52 cases รวม 14 cases ใหม่สำหรับ desktop/mobile; รอผล CI
-- JS/CSS/snapshot ยังอยู่ใน budget เดิม; artifact รุ่นนี้ตรวจ 11 ไฟล์
+- Browser 52 cases ผ่านแบบไม่มี flaky รวม 14 cases ใหม่สำหรับ desktop/mobile; รวมทั้งหมด 158 cases
+- JS 189,194 / CSS 51,603 / snapshot 2,714,121 bytes อยู่ใน budget เดิม; artifact รุ่นนี้ตรวจ 11 ไฟล์
 - Browser จริงใช้ QA origin ว่างที่พอร์ต 8012 ไม่เขียนทับแผน QA ที่พอร์ตเดิมหรือแผนบนเว็บจริง
 - ตัวอย่าง QA มี XI 11 + bench 4, C/VC, 56.20 xPts; PNG 800×1505 px และไม่มีชื่อแผนทดสอบ/Team ID/ชื่อทีมในข้อความส่งออก
-- ต้องตรวจ Browser และ published smoke ครบก่อนปิดงาน
+- ตรวจหน้าตา desktop และ mobile 375px; หลังเปิด preview มี root overflow 0, unlabeled controls 0
+- ฟอนต์ไทยและรายชื่อ/คำเตือนท้ายการ์ดแสดงครบ; fixture ready เริ่มแรก 313ms ไม่ใช่ Core Web Vitals บนอุปกรณ์จริง
+
+## หลักฐานการเผยแพร่
+
+- [PR #3](https://github.com/Sarayutp/fpl-decision-lab/pull/3), merge commit `c1809872c5dfa52e1ae3e3658ab3a77f8abdeff1`
+- [PR CI](https://github.com/Sarayutp/fpl-decision-lab/actions/runs/33354214148) และ [main CI](https://github.com/Sarayutp/fpl-decision-lab/actions/runs/33354402624) ผ่าน
+- [Deployment](https://github.com/Sarayutp/fpl-decision-lab/actions/runs/33354402640) ผ่านทั้ง browser release gate 52 cases, deploy และ published smoke
+- Build `0bc7ec62cd99e14d`, snapshot `2026-08-31T03:37:31.897488+00:00`, schema 2, Team ID `5105794`
+- ดาวน์โหลด validated artifact มาตรวจ hash ครบ 11 ไฟล์ และตรวจ URL จริงพร้อม expected build เดียวกันผ่าน
+- Browser บนเว็บจริงแสดง Sarayut FC, runtime `ready`, web/pipeline `2.2.0-rc.1` และส่วนสร้างการ์ดตามรุ่นที่เผยแพร่ โดยไม่สร้าง/แทนที่แผนบนเว็บจริง
+- ตรวจ artifact ของ Phase 7A เดิมผ่านด้วย checker ปัจจุบัน ไม่ deploy ย้อนรุ่นระหว่าง QA นี้
+- ยังมี upstream GitHub Actions Node 20 deprecation warnings; เป็นคำเตือน ไม่ใช่ test/deploy failure
 
 ## ข้อจำกัด
 

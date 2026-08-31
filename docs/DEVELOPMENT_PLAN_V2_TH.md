@@ -398,7 +398,7 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 
 เริ่มหลัง M1–M4 ใช้งานได้จริงและมีข้อมูลเพียงพอว่าผู้ใช้ต้องการ
 
-**สถานะ:** In progress — Phase 7A เผยแพร่แล้ว; Phase 7B (Decision card) อยู่ระหว่างตรวจรับ 31 สิงหาคม 2026; ส่วนอื่นยัง Deferred
+**สถานะ:** In progress — Phase 7A และ Phase 7B เผยแพร่และตรวจรับแล้ว 31 สิงหาคม 2026; ส่วนอื่นยัง Deferred
 
 **ระยะเวลาโดยประมาณ:** ประเมินหลังเก็บ feedback จาก v2
 
@@ -407,7 +407,7 @@ Phase 0 และ Phase 1 ผ่าน acceptance criteria ทั้งหมด
 - [ ] Fixture swing และ watchlist alerts
 - [ ] รองรับหลายทีม/หลายบัญชีโดยแยกข้อมูลสมบูรณ์
 - [x] Compare scenarios แบบ side-by-side เฉพาะ GW ปัจจุบัน (Phase 7A)
-- [ ] แชร์ decision card ที่ไม่เปิดเผยข้อมูลเกินจำเป็น
+- [x] แชร์ decision card ที่ไม่เปิดเผยข้อมูลเกินจำเป็น (Phase 7B: PNG/TXT/clipboard ไม่โพสต์อัตโนมัติ)
 - [ ] Notification ก่อน deadline เมื่อข่าวทำให้คำแนะนำเปลี่ยน
 
 ฟีเจอร์ใน Phase นี้ต้องไม่ทำให้คำตอบหลักประจำ Gameweek ซับซ้อนขึ้น
@@ -432,7 +432,7 @@ EO/rank simulation หรือ notification ก่อนมี feedback เพ�
 
 ### Phase 7B — Decision card สำหรับแชร์
 
-**สถานะ:** In review — รุ่น `2.2.0-rc.1`; เริ่ม 31 สิงหาคม 2026
+**สถานะ:** Done — รุ่น `2.2.0-rc.1` เผยแพร่พร้อม CI และ published smoke ผ่าน 31 สิงหาคม 2026
 
 ต่อยอดแผน A/B โดยให้ดาวน์โหลด/คัดลอกการ์ดที่ผู้ใช้ตรวจแล้ว ไม่เริ่มระบบโพสต์ออนไลน์
 หรือ notifications และไม่เพิ่มแหล่งข้อมูล/ค่าใช้จ่ายภายนอก
@@ -443,7 +443,7 @@ EO/rank simulation หรือ notification ก่อนมี feedback เพ�
 - [x] ดาวน์โหลด PNG/TXT หรือคัดลอกโดยไม่ upload/post และไม่เขียน Planner/Journal
 - [x] ตรวจ context และ record ซ้ำก่อน export; เปลี่ยนแผน/ข่าว/ราคา/slot ล้าง preview เดิม
 - [x] ปิดการสร้าง/ส่งออกเมื่อ offline/stale/deadline/mismatch; รองรับ canvas/clipboard failure
-- [ ] Browser CI และ published smoke ผ่านก่อนปิดงานส่วนนี้
+- [x] Browser CI และ published smoke ผ่าน (Python 62 / JS 44 / browser 52 รวม 158 cases)
 
 การ์ดยังเปิดเผยรายชื่อและแผนของผู้ใช้ ไม่ใช่การ anonymize อย่างสมบูรณ์ และไฟล์ที่ส่งออกไปแล้ว
 เรียกคืนหรือปรับตามข่าวไม่ได้ ไม่ใช่ผลทั้งช่วงหลาย GW หรือคำแนะนำให้ใช้ชิป/-4
