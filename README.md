@@ -24,7 +24,11 @@ Python 60, JavaScript 20 และ browser E2E 26 cases ผ่านใน CI �
 Phase 7A [เปรียบเทียบฉบับร่าง Planner แบบ A/B](https://sarayutp.github.io/fpl-decision-lab/#scenario-comparison)
 เฉพาะ GW ปัจจุบัน พร้อมตรวจ context และเก็บใน Browser เผยแพร่รุ่น `2.1.0-rc.1` แล้ว
 Python 61, JavaScript 33 และ browser 38 cases ผ่าน พร้อม published smoke
-ดู [ผลตรวจและขอบเขต](docs/PHASE_7A_QA.md). Phase 7 ส่วนอื่นยังไม่ได้เริ่ม
+ดู [ผลตรวจและขอบเขต](docs/PHASE_7A_QA.md).
+
+Phase 7B เพิ่มการ์ดจากแผน A/B สำหรับดาวน์โหลด PNG/TXT หรือคัดลอก โดยไม่ใส่ชื่อทีม,
+Team ID, งบหรือบันทึกส่วนตัว ไม่อัปโหลดหรือโพสต์อัตโนมัติ รุ่น `2.2.0-rc.1`
+อยู่ระหว่างตรวจรับ ดู [ผลตรวจและข้อจำกัด](docs/PHASE_7B_QA.md). Phase 7 ส่วนอื่นยังไม่ได้เริ่ม
 
 **Dashboard ออนไลน์:** [https://sarayutp.github.io/fpl-decision-lab/](https://sarayutp.github.io/fpl-decision-lab/)
 

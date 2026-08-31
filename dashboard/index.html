@@ -366,6 +366,7 @@
           <button id="compare-export" class="button button-ghost" type="button" disabled>ส่งออกแผน A/B JSON</button>
         </div>
         <p class="planner-note">เก็บได้สองช่องต่อทีม/ฤดูกาล/GW • การแทนที่ทับเฉพาะช่องนั้น ควรส่งออกก่อน • ยังไม่รองรับนำเข้าไฟล์</p>
+        <p class="planner-note">JSON สำรองมี Team ID งบและข้อมูลแผนส่วนตัว ไม่ใช่ไฟล์สำหรับแชร์ — ใช้การ์ดด้านล่างแทน</p>
         <div id="compare-board" class="compare-board"></div>
         <p id="compare-difference" class="compare-difference" role="status" data-comparable="false"></p>
         <p class="planner-note">เปรียบเทียบเฉพาะ GW นี้ ไม่รวมมูลค่าชิป/FT และผลจากการย้ายตัวใน GW อื่น คะแนนสูงกว่าไม่ได้แปลว่าคุ้มกว่าในระยะยาว และไม่ใช่การแนะนำให้ติดลบหรือใช้ชิป</p>
@@ -376,6 +377,29 @@
             <tbody id="compare-table-body"></tbody>
           </table>
         </div>
+        <details id="decision-share" class="panel share-card-panel">
+          <summary>สร้างการ์ดจากแผน A/B สำหรับแชร์</summary>
+          <h3>เลือกข้อมูลก่อนส่งต่อ</h3>
+          <p>ดาวน์โหลดภาพ PNG หรือข้อความ เก็บเฉพาะในเครื่อง ไม่อัปโหลดและไม่โพสต์อัตโนมัติ</p>
+          <p class="planner-note">ไม่ใส่ชื่อทีม/ผู้จัดการ, Team ID, งบ, ราคาขาย, ชื่อแผนหรือบันทึกส่วนตัว แต่รายชื่อผู้เล่น ชิปและย้ายตัวจะยังเปิดเผยแผนของคุณ — ตรวจตัวอย่างก่อนส่งให้ผู้อื่น</p>
+          <label for="share-card-slot">แผนสำหรับสร้างการ์ด</label>
+          <div class="button-row compare-actions">
+            <select id="share-card-slot"><option value="A">แผน A</option><option value="B">แผน B</option></select>
+            <button id="share-card-create" class="button button-primary" type="button" disabled>ดูตัวอย่างการ์ด</button>
+          </div>
+          <p id="share-card-status" class="planner-note" role="status"></p>
+          <div id="share-card-preview" hidden>
+            <div class="share-card-preview-grid">
+              <img id="share-card-image" alt="การ์ดแผน FPL สำหรับดาวน์โหลด เนื้อหาเดียวกับข้อความข้างภาพ">
+              <div><h4>ข้อความที่จะส่งออก</h4><pre id="share-card-text" tabindex="0" aria-label="ข้อความในการ์ดสำหรับแชร์"></pre></div>
+            </div>
+          </div>
+          <div class="button-row compare-actions">
+            <button id="share-card-png" class="button button-ghost" type="button" disabled>ดาวน์โหลดการ์ด PNG</button>
+            <button id="share-card-txt" class="button button-ghost" type="button" disabled>ดาวน์โหลดข้อความการ์ด</button>
+            <button id="share-card-copy" class="button button-ghost" type="button" disabled>คัดลอกข้อความการ์ด</button>
+          </div>
+        </details>
       </section>
 
       <section id="decision-log" class="section-block" aria-labelledby="decision-log-title">
@@ -543,6 +567,7 @@
     <script src="./assets/runtime.js?v=20" defer></script>
     <script src="./assets/decision-log.js?v=20" defer></script>
     <script src="./assets/scenario-compare.js?v=21" defer></script>
+    <script src="./assets/decision-card.js?v=22" defer></script>
     <script src="./assets/app.js?v=20" defer></script>
   </body>
 </html>

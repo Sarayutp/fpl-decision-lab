@@ -2,6 +2,15 @@
 
 ## ภาพรวม
 
+Phase 7B เพิ่ม `assets/decision-card.js` ต่อจาก A/B ด้วย explicit allowlist สำหรับภาพ PNG
+และข้อความ: slot, GW, ชิป, moves ปัจจุบัน, XI/C/VC/bench, คะแนนสุทธิและข้อจำกัด, snapshot/model/release.
+ชื่อผู้เล่นอ่านจาก public catalog ไม่ใช้ label, risk notes หรือชื่อที่อยู่ใน record ที่บันทึก
+ไม่มี Team ID/ชื่อทีม/ผู้จัดการ/งบ/ราคาขาย/context key/บันทึกส่วนตัวในไฟล์หรือชื่อไฟล์
+preview อยู่ในหน่วยความจำเท่านั้น ไม่เพิ่ม storage, server, upload หรือ external dependency
+ทุก export ตรวจ freshness/identity/deadline และ record equality ซ้ำ; preview เก่าถูกล้างเมื่อ context/slot/record เปลี่ยน
+Canvas ใช้ฟอนต์ระบบ, wrap ภาษาไทยตาม grapheme และสูงตามเนื้อหา; PNG ไม่สำเร็จยังส่งออกข้อความได้
+manifest รุ่นนี้มี 11 ไฟล์ และยังตรวจ artifact รุ่นก่อนเพื่อ rollback ได้
+
 Phase 7A เพิ่ม `assets/scenario-compare.js` เป็น UI/logic ฝั่ง Browser แยกจาก Journal
 และไม่แก้ snapshot schema. เก็บสอง frozen records ใน
 `fpl-decision-lab:compare:v1:<season>:<team>:gw<gameweek>` พร้อม model/release/source timestamp,
