@@ -2,6 +2,11 @@
 
 ## Release checks
 
+คู่มือรุ่น `2.3.0-rc.1` เพิ่ม Python 14 cases (รวม 76), JS 3 cases (รวม 47)
+และ browser desktop/mobile 16 cases (รวม 68; รอ CI) สำหรับ menu/TOC, Markdown download,
+no-JS/no-data, error-state access, print, responsive/keyboard และ offline navigation แยกหน้า
+รายละเอียดและสถานะเผยแพร่: [USER_GUIDE_QA.md](USER_GUIDE_QA.md)
+
 Phase 7B เพิ่ม card/privacy tests 11 ข้อ (JS รวม 44), ตรวจ linked asset อีกหนึ่งกรณี
 (Python รวม 62) และ browser card flow อีก 14 cases (รวม 52).
 ผ่านทั้งหมด 158 cases พร้อม published smoke; ผลตรวจ: [PHASE_7B_QA.md](PHASE_7B_QA.md)

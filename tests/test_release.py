@@ -64,10 +64,24 @@ def test_smoke_covers_new_linked_assets_but_accepts_legacy_manifests(tmp_path, m
     index = re.sub(r'\s*<script src="\./assets/(?:scenario-compare|decision-card)\.js[^\"]*" defer></script>', "", (site / "index.html").read_text())
     for name in ("scenario-compare", "decision-card"):
         info["asset_sha256"].pop(f"assets/{name}.js", None)
+    index = re.sub(r'\s*<a href="\./guide.html">[^<]+</a>', "", index)
+    for name in ("guide.html", "guide.md", "assets/guide.css", "assets/guide.js"):
+        info["asset_sha256"].pop(name)
     (site / "index.html").write_text(index)
     info["asset_sha256"]["index.html"] = hashlib.sha256(index.encode()).hexdigest()
     info_path.write_text(json.dumps(info))
     assert smoke.check_site(str(site))["assets_checked"] == 9
+
+
+@pytest.mark.parametrize("missing", ["guide.html", "guide.md", "assets/guide.css", "assets/guide.js"])
+def test_smoke_requires_the_linked_guide_and_download(tmp_path, missing):
+    fixture_build(tmp_path)
+    path = tmp_path / "site/build-info.json"
+    info = json.loads(path.read_text())
+    del info["asset_sha256"][missing]
+    path.write_text(json.dumps(info))
+    with pytest.raises(ValueError, match="Guide files"):
+        smoke.check_site(str(tmp_path / "site"))
 
 
 def test_build_rejects_same_team_same_gw_but_old_briefing(tmp_path):

@@ -8,12 +8,20 @@ import pytest
 from fpl_mvp.site import REQUIRED_DASHBOARD_FILES, build_site, validate_chip_plan_safety
 
 
+def dashboard_fixture_content(relative_path: str) -> str:
+    if relative_path == "guide.md":
+        return "# User guide\n\n## 01. Start\n\nRead-only plans.\n"
+    if relative_path == "guide.html":
+        return "<h1>{{guide_title}}</h1>{{guide_toc}}{{guide_body}}{{release}}"
+    return relative_path
+
+
 def test_build_site_copies_dashboard_and_data_atomically(tmp_path) -> None:
     dashboard = tmp_path / "dashboard"
     for relative_path in REQUIRED_DASHBOARD_FILES:
         path = dashboard / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(relative_path, encoding="utf-8")
+        path.write_text(dashboard_fixture_content(relative_path), encoding="utf-8")
     data = tmp_path / "latest.json"
     data.write_text(
         json.dumps(
@@ -119,7 +127,7 @@ def test_build_site_rejects_a_briefing_for_another_team(tmp_path) -> None:
     for relative_path in REQUIRED_DASHBOARD_FILES:
         path = dashboard / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(relative_path, encoding="utf-8")
+        path.write_text(dashboard_fixture_content(relative_path), encoding="utf-8")
     data = tmp_path / "latest.json"
     data.write_text(
         json.dumps(
@@ -211,7 +219,7 @@ def test_build_site_rejects_a_briefing_for_another_gameweek(tmp_path) -> None:
     for relative_path in REQUIRED_DASHBOARD_FILES:
         path = dashboard / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(relative_path, encoding="utf-8")
+        path.write_text(dashboard_fixture_content(relative_path), encoding="utf-8")
     data = tmp_path / "latest.json"
     data.write_text(
         json.dumps(

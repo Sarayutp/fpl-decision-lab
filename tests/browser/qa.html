@@ -2,6 +2,7 @@
 <body><h1>Phase 6 — Browser QA</h1><p>ใช้ข้อมูลตัวอย่างที่ปิดชื่อผู้จัดการแล้ว บนพอร์ตแยกจากแผนจริง</p>
 <label>ความกว้าง <select id="width"><option>375</option><option>768</option><option>1280</option></select></label>
 <label>สถานะ <select id="scenario"><option>ready</option><option>stale</option><option>offline</option><option>partial</option><option>mismatch</option><option>incompatible</option><option>error</option><option>empty</option><option>deadline</option></select></label>
+<label>หน้า <select id="page"><option value="/">Dashboard</option><option value="/guide.html">วิธีใช้งาน</option></select></label>
 <button id="load" type="button">เปิดกรณีทดสอบ</button><button id="inspect" type="button">ตรวจหน้าปัจจุบัน</button>
 <label>ส่วนที่ดู <select id="section"><option value="identity">ชื่อทีม</option><option value="this-gameweek">This Gameweek</option><option value="chip-planner">Planner</option><option value="players">Players</option><option value="decision-log">Decision log</option><option value="scenario-comparison">Compare A/B</option><option value="decision-share">Share card</option></select></label><button id="show-section" type="button">แสดงส่วนที่เลือก</button>
 <pre id="result" role="status">ยังไม่ตรวจ</pre><div class="frame-scroll"><iframe id="preview" title="FPL responsive preview" width="375" height="850"></iframe></div>

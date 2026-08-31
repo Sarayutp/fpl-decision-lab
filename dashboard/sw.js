@@ -5,6 +5,7 @@ const APP_SHELL = [
   "./assets/decision-log.js?v=20", "./assets/app.js?v=20",
   "./assets/scenario-compare.js?v=21",
   "./assets/decision-card.js?v=22",
+  "./guide.html", "./guide.md", "./assets/guide.css?v=23", "./assets/guide.js?v=23",
   "./manifest.webmanifest", "./public/favicon.png", "./public/icon-192.png",
   "./public/icon-512.png", "./data/latest.json", "./data/briefing.md"
 ];
@@ -25,7 +26,9 @@ self.addEventListener("activate", (event) => {
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   const isData = /\/data\/(latest\.json|briefing\.md)$/.test(new URL(request.url).pathname);
-  const cacheKey = request.mode === "navigate" ? "./index.html" : request;
+  const isGuide = new URL(request.url).pathname === new URL("./guide.html", self.registration.scope).pathname;
+  const isIndex = ["./", "./index.html"].some(path => new URL(path, self.registration.scope).pathname === new URL(request.url).pathname);
+  const cacheKey = request.mode === "navigate" && (isGuide || isIndex) ? (isGuide ? "./guide.html" : "./index.html") : request;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8000);
   try {

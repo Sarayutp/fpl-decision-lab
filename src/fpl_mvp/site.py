@@ -9,6 +9,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 from .release import RELEASE_VERSION
+from .guide import build_guide
 
 
 REQUIRED_DASHBOARD_FILES = (
@@ -18,6 +19,10 @@ REQUIRED_DASHBOARD_FILES = (
     "assets/decision-log.js",
     "assets/scenario-compare.js",
     "assets/decision-card.js",
+    "guide.html",
+    "guide.md",
+    "assets/guide.css",
+    "assets/guide.js",
     "assets/styles.css",
     "manifest.webmanifest",
     "sw.js",
@@ -199,12 +204,13 @@ def build_site(
             raise ValueError("AI briefing does not match snapshot timestamp")
         if snapshot["schema_version"] != 2:
             raise ValueError("Unsupported snapshot schema")
+        build_guide(temporary_dir)
         critical_files = [*REQUIRED_DASHBOARD_FILES, "data/latest.json", "data/briefing.md"]
         # Immutable asset URLs also recover clients controlled by an older cache-first worker.
-        for shell in ("index.html", "sw.js"):
+        for shell in ("index.html", "guide.html", "sw.js"):
             path = temporary_dir / shell
             content = path.read_text(encoding="utf-8")
-            for asset in ("assets/app.js", "assets/runtime.js", "assets/decision-log.js", "assets/scenario-compare.js", "assets/decision-card.js", "assets/styles.css"):
+            for asset in ("assets/app.js", "assets/runtime.js", "assets/decision-log.js", "assets/scenario-compare.js", "assets/decision-card.js", "assets/styles.css", "assets/guide.css", "assets/guide.js"):
                 digest = hashlib.sha256((temporary_dir / asset).read_bytes()).hexdigest()[:12]
                 content = re.sub(re.escape(asset) + r"\?v=[\w.-]+", f"{asset}?v={digest}", content)
             path.write_text(content, encoding="utf-8")

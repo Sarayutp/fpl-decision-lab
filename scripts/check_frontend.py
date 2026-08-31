@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> None:
     baseline = json.loads((ROOT / "tests/fixtures/frontend-budget.json").read_text())
     metrics = {"javascript_bytes": sum(path.stat().st_size for path in (ROOT / "dashboard/assets").glob("*.js")),
-               "css_bytes": (ROOT / "dashboard/assets/styles.css").stat().st_size,
+               "css_bytes": sum(path.stat().st_size for path in (ROOT / "dashboard/assets").glob("*.css")),
                "snapshot_bytes": (ROOT / "dist/data/latest.json").stat().st_size}
     for key, value in metrics.items():
         assert value <= baseline["budgets"][key], f"{key} exceeds budget: {value}"

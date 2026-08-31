@@ -3,6 +3,10 @@ const result = document.querySelector('#result');
 let started = 0;
 function inspect() {
   const doc = frame.contentDocument;
+  if (doc?.querySelector('#guide-content')) {
+    result.textContent=JSON.stringify({page:'guide',width:frame.clientWidth,pageOverflow:doc.documentElement.scrollWidth-frame.clientWidth,tableOverflow:Math.max(0,...[...doc.querySelectorAll('.guide-content table')].map(table=>table.getBoundingClientRect().right-table.parentElement.getBoundingClientRect().right)),chapters:doc.querySelectorAll('#guide-content h2').length,toc:doc.querySelectorAll('.guide-toc a').length,download:doc.querySelector('a[download]')?.getAttribute('href')},null,2);
+    return;
+  }
   if (!doc?.querySelector('#runtime-state')) return;
   const appState = doc.querySelector('#runtime-state').dataset.kind;
   const visible = el => el.getClientRects().length > 0;
@@ -26,11 +30,11 @@ function inspect() {
 }
 document.querySelector('#load').addEventListener('click',()=>{
   frame.width=document.querySelector('#width').value; started=performance.now(); result.textContent='กำลังโหลด…';
-  frame.src=`/?qaState=${encodeURIComponent(document.querySelector('#scenario').value)}&preview=${Date.now()}`;
+  frame.src=`${document.querySelector('#page').value}?qaState=${encodeURIComponent(document.querySelector('#scenario').value)}&preview=${Date.now()}`;
 });
 document.querySelector('#inspect').addEventListener('click',inspect);
 document.querySelector('#show-section').addEventListener('click',()=>{const target=frame.contentDocument?.getElementById(document.querySelector('#section').value);if(target?.tagName==='DETAILS') target.open=true;target?.scrollIntoView();frame.scrollIntoView();});
 frame.addEventListener('load',()=>{
   const timer=setInterval(()=>{const state=frame.contentDocument?.querySelector('#runtime-state')?.dataset.kind;
-    if(state && state!=='loading' || performance.now()-started>12000){clearInterval(timer);inspect();}},100);
+    if(frame.contentDocument?.querySelector('#guide-content') || state && state!=='loading' || performance.now()-started>12000){clearInterval(timer);inspect();}},100);
 });
