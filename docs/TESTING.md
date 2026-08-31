@@ -3,7 +3,7 @@
 ## Release checks
 
 คู่มือรุ่น `2.3.0-rc.1` เพิ่ม Python 14 cases (รวม 76), JS 3 cases (รวม 47)
-และ browser desktop/mobile 16 cases (รวม 68; รอ CI) สำหรับ menu/TOC, Markdown download,
+และ browser desktop/mobile 16 cases (รวม 68) ผ่านครบ 191 cases สำหรับ menu/TOC, Markdown download,
 no-JS/no-data, error-state access, print, responsive/keyboard และ offline navigation แยกหน้า
 รายละเอียดและสถานะเผยแพร่: [USER_GUIDE_QA.md](USER_GUIDE_QA.md)
 
