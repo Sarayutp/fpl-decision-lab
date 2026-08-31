@@ -38,11 +38,46 @@ for (const [state, kind, visible] of [['partial','partial',true],['offline','off
   });
 }
 
-test('mobile is keyboard reachable and has no page-level horizontal overflow', async ({page}) => {
-  await page.setViewportSize({width:375,height:812}); await page.goto('/');
+for (const width of [375,768,1280]) {
+  test(`${width}px meets responsive, labels, contrast and keyboard baselines`, async ({page}) => {
+    await page.setViewportSize({width,height:900});
+    const started = Date.now();
+    await page.goto('/');
+    await expect(page.locator('#runtime-state')).toHaveAttribute('data-kind','ready');
+    expect(Date.now()-started).toBeLessThan(10000);
+    await expect(page.getByRole('navigation',{name:'เมนูหลัก'})).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+    const controls = page.locator('input:visible,select:visible,textarea:visible,button:visible');
+    for (const control of await controls.all()) await expect(control).toHaveAccessibleName(/\S/);
+    const contrast = await page.evaluate(() => {
+      const css = getComputedStyle(document.documentElement);
+      const luminance = name => css.getPropertyValue(name).trim().slice(1).match(/../g)
+        .map(n=>parseInt(n,16)/255).map(n=>n<=.04045?n/12.92:((n+.055)/1.055)**2.4)
+        .reduce((sum,n,i)=>sum+n*[.2126,.7152,.0722][i],0);
+      return [['--ink','--bg'],['--muted','--surface-2']].map(pair=>{
+        const [light,dark] = pair.map(luminance).sort((a,b)=>b-a);
+        return (light+.05)/(dark+.05);
+      });
+    });
+    for (const ratio of contrast) expect(ratio).toBeGreaterThanOrEqual(4.5);
+    await page.keyboard.press('Tab'); await expect(page.locator('.skip-link')).toBeFocused();
+    expect(await page.locator('.skip-link').evaluate(el => getComputedStyle(el).outlineStyle)).not.toBe('none');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('main')).toBeFocused();
+  });
+}
+
+test('reduced motion disables smooth scrolling and lengthy transitions', async ({page}) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
   await expect(page.locator('#runtime-state')).toHaveAttribute('data-kind','ready');
-  await expect(page.getByRole('navigation',{name:'เมนูหลัก'})).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-  await page.keyboard.press('Tab'); await expect(page.locator('.skip-link')).toBeFocused();
-  expect(await page.locator('.skip-link').evaluate(el => getComputedStyle(el).outlineStyle)).not.toBe('none');
+  const motion = await page.evaluate(() => ({
+    scroll:getComputedStyle(document.documentElement).scrollBehavior,
+    transition:getComputedStyle(document.querySelector('#copy-briefing')).transitionDuration,
+    animation:getComputedStyle(document.querySelector('#captain-list')).animationDuration,
+  }));
+  expect(motion.scroll).toBe('auto');
+  for (const value of [motion.transition,motion.animation]) {
+    for (const duration of value.split(',')) expect(parseFloat(duration)).toBeLessThanOrEqual(.00001);
+  }
 });
