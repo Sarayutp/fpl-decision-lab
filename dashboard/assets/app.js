@@ -144,6 +144,7 @@ function renderRuntimeStatus() {
   $("#download-briefing").hidden = !canCopy;
   $("#save-planner").disabled = !decisionActionsAllowed();
   renderDecisionLog();
+  renderComparison();
   return status;
 }
 
@@ -1471,6 +1472,7 @@ function plannerActionLabel(action) {
 }
 
 function renderPlanner() {
+  renderComparison();
   const planner = effectivePlanner();
   const currentGameweek = Number(state.data.game.next_gameweek?.id);
   const allowed = recommendationsAllowed() && planner.status === "ready";
@@ -2224,6 +2226,7 @@ function bindEvents() {
     catch (error) { toast(error.message); }
   });
   bindDecisionLogEvents();
+  bindComparisonEvents();
 }
 
 async function boot() {

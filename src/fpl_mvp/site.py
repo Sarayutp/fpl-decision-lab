@@ -16,6 +16,7 @@ REQUIRED_DASHBOARD_FILES = (
     "assets/app.js",
     "assets/runtime.js",
     "assets/decision-log.js",
+    "assets/scenario-compare.js",
     "assets/styles.css",
     "manifest.webmanifest",
     "sw.js",
@@ -202,7 +203,7 @@ def build_site(
         for shell in ("index.html", "sw.js"):
             path = temporary_dir / shell
             content = path.read_text(encoding="utf-8")
-            for asset in ("assets/app.js", "assets/runtime.js", "assets/decision-log.js", "assets/styles.css"):
+            for asset in ("assets/app.js", "assets/runtime.js", "assets/decision-log.js", "assets/scenario-compare.js", "assets/styles.css"):
                 digest = hashlib.sha256((temporary_dir / asset).read_bytes()).hexdigest()[:12]
                 content = re.sub(re.escape(asset) + r"\?v=[\w.-]+", f"{asset}?v={digest}", content)
             path.write_text(content, encoding="utf-8")

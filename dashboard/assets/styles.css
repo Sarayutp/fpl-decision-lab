@@ -1,3 +1,20 @@
+.compare-label-input { display: block; width: min(100%, 540px); min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); }
+.compare-actions { flex-wrap: wrap; margin: 16px 0; }
+.compare-board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
+.compare-slot { min-width: 0; overflow-wrap: anywhere; }
+.compare-slot h3 { font-size: 22px; }
+.compare-slot p, .compare-slot small { color: var(--muted); }
+.compare-slot .compare-status { color: var(--green); }
+.compare-slot .warning { color: var(--amber); }
+.compare-slot details { margin-top: 16px; }
+.compare-difference { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--muted); }
+.compare-difference[data-comparable="true"] { color: var(--ink); border-color: var(--green-2); }
+.compare-table { table-layout: fixed; min-width: 620px; width: 100%; }
+.compare-table th:first-child { width: 27%; }
+.compare-table td, .compare-table tbody th { white-space: normal; overflow-wrap: anywhere; vertical-align: top; line-height: 1.7; padding: 14px; }
+.compare-table tbody th { text-align: left; color: var(--muted); font-weight: 600; }
+@media (max-width: 600px) { .compare-board { grid-template-columns: 1fr; } .compare-actions .button { width: 100%; } }
+
 :root {
   color-scheme: dark;
   --ink: #edf8f2;

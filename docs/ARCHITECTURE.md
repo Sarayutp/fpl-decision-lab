@@ -2,6 +2,14 @@
 
 ## ภาพรวม
 
+Phase 7A เพิ่ม `assets/scenario-compare.js` เป็น UI/logic ฝั่ง Browser แยกจาก Journal
+และไม่แก้ snapshot schema. เก็บสอง frozen records ใน
+`fpl-decision-lab:compare:v1:<season>:<team>:gw<gameweek>` พร้อม model/release/source timestamp,
+canonical context key ของข่าวและ transfer inputs, XI/C/VC/bench, current/future moves และงบ
+delta แสดงเฉพาะสอง record ที่ตรง context ปัจจุบันและผ่าน freshness/identity/deadline gates
+การ capture ไม่เรียก savePlannerSettings และไม่แก้ Decision Journal; future moves ไม่รวมใน GW delta
+build manifest ครอบคลุม asset ใหม่ แต่ smoke checker ยังรองรับ manifest 9 ไฟล์ของ Phase 6 เพื่อ rollback ได้
+
 ```mermaid
 flowchart LR
     FPL[FPL Public API] --> P[Python pipeline]

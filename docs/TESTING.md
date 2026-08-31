@@ -2,6 +2,10 @@
 
 ## Phase 6 release checks
 
+Phase 7A เพิ่ม comparison logic tests 13 ข้อ (JS รวม 33), Python legacy-manifest test
+(รวม 61) และ browser A/B flow เพิ่ม 12 cases (desktop/mobile รวม 38).
+ผลตรวจรุ่นนี้: [PHASE_7A_QA.md](PHASE_7A_QA.md); ตัวเลข Phase 6 ด้านล่างเป็นหลักฐานของรุ่นก่อน
+
 ผลล่าสุดและข้อที่ยังรอ: [PHASE_6_QA.md](PHASE_6_QA.md)
 
 ```bash

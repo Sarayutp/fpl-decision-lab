@@ -3,6 +3,7 @@ const CACHE_NAME = `${CACHE_PREFIX}__BUILD_ID__`;
 const APP_SHELL = [
   "./index.html", "./assets/styles.css?v=20", "./assets/runtime.js?v=20",
   "./assets/decision-log.js?v=20", "./assets/app.js?v=20",
+  "./assets/scenario-compare.js?v=21",
   "./manifest.webmanifest", "./public/favicon.png", "./public/icon-192.png",
   "./public/icon-512.png", "./data/latest.json", "./data/briefing.md"
 ];

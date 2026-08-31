@@ -48,6 +48,25 @@ def test_smoke_rejects_a_mixed_or_modified_release(tmp_path):
         smoke.check_site(str(tmp_path / "site"))
 
 
+def test_smoke_covers_new_linked_assets_but_accepts_legacy_manifests(tmp_path):
+    fixture_build(tmp_path)
+    site = tmp_path / "site"
+    info_path = site / "build-info.json"
+    info = json.loads(info_path.read_text())
+    del info["asset_sha256"]["assets/scenario-compare.js"]
+    info_path.write_text(json.dumps(info))
+    with pytest.raises(ValueError, match="Referenced assets"):
+        smoke.check_site(str(site))
+    # Legacy Phase 6 HTML did not reference the comparison module. Keep its 9-file contract valid.
+    import hashlib
+    import re
+    index = re.sub(r'\s*<script src="\./assets/scenario-compare\.js[^\"]*" defer></script>', "", (site / "index.html").read_text())
+    (site / "index.html").write_text(index)
+    info["asset_sha256"]["index.html"] = hashlib.sha256(index.encode()).hexdigest()
+    info_path.write_text(json.dumps(info))
+    assert smoke.check_site(str(site))["assets_checked"] == 9
+
+
 def test_build_rejects_same_team_same_gw_but_old_briefing(tmp_path):
     fixture_build(tmp_path)
     (tmp_path / "briefing.md").write_text("- Team ID: 990001\n- เป้าหมาย: Gameweek 3\n- สร้างเมื่อ: 2000-01-01\n")
